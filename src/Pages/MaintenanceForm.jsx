@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
+import CreatableSelect from "react-select/creatable";
 const MaintenanceForm = () => {
   const {
     register,
@@ -19,6 +20,19 @@ const MaintenanceForm = () => {
   } = useForm();
   const [previewImage, setPreviewImage] = useState(null);
   const maintenanceDateRef = useRef(null);
+  // car name / registration number
+  const [parts, setParts] = useState([]);
+  useEffect(() => {
+    fetch("https://api.dropshep.com/api/parts")
+      .then((response) => response.json())
+      .then((data) => setParts(data.data))
+      .catch((error) => console.error("Error fetching driver data:", error));
+  }, []);
+
+  const partsOptions = parts.map((part) => ({
+    value: part.name,
+    label: part.name,
+  }));
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
@@ -48,7 +62,6 @@ const MaintenanceForm = () => {
 
   // post data on server
   const onSubmit = async (data) => {
-    console.log("add car data", data);
     try {
       const formData = new FormData();
       for (const key in data) {
@@ -61,7 +74,7 @@ const MaintenanceForm = () => {
         formData
       );
       const resData = response.data;
-      console.log("resData", resData);
+
       if (resData.status === "success") {
         toast.success("তথ্য সফলভাবে সংরক্ষণ হয়েছে!", {
           position: "top-right",
@@ -135,39 +148,60 @@ const MaintenanceForm = () => {
               <label className="text-primary text-sm font-semibold">
                 পার্টস এন্ড স্পায়ারস
               </label>
-              <select
-                {...register("parts_and_spairs", { require: true })}
-                className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
-              >
-                <option value="">পার্টস এন্ড স্পায়ারস</option>
-                <option value="EngineOil">Engine Oil</option>
-                <option value="Pistons">Pistons</option>
-                <option value="ABS_Sensors">ABS Sensors</option>
-                <option value="BrakeDrum">Brake Drum</option>
-              </select>
+              <Controller
+                name="parts_and_spairs"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value, ref } }) => (
+                  <Select
+                    inputRef={ref}
+                    value={partsOptions.find((c) => c.value === value) || null}
+                    onChange={(val) => onChange(val ? val.value : "")}
+                    options={partsOptions}
+                    placeholder="পার্টস এন্ড স্পায়ারস..."
+                    className="mt-1 text-sm"
+                    classNamePrefix="react-select"
+                    isClearable
+                  />
+                )}
+              />
+
               {errors.parts_and_spairs && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
               )}
-              <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
                 মেইনটেনেসের ধরন
               </label>
-              <select
-                {...register("maintenance_type", { required: true })}
-                className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
-              >
-                <option value="">মেইনটেনেসের ধরন</option>
-                <option value="EngineOil">Engine Oil</option>
-                <option value="Pistons">Pistons</option>
-                <option value="ABS_Sensors">ABS Sensors</option>
-                <option value="BrakeDrum">Brake Drum</option>
-              </select>
+              <Controller
+                name="maintenance_type"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value, ref } }) => (
+                  <CreatableSelect
+                    inputRef={ref}
+                    value={value ? { value: value, label: value } : null}
+                    onChange={(val) => onChange(val ? val.value : "")}
+                    options={[
+                      { value: "EngineOil", label: "Engine Oil" },
+                      { value: "Pistons", label: "Pistons" },
+                      { value: "ABS_Sensors", label: "ABS Sensors" },
+                      { value: "BrakeDrum", label: "Brake Drum" },
+                    ]}
+                    placeholder="মেইনটেনেসের ধরন লিখুন বা নির্বাচন করুন..."
+                    className="mt-1 text-sm"
+                    classNamePrefix="react-select"
+                    isClearable
+                    formatCreateLabel={(inputValue) =>
+                      `"${inputValue}" যোগ করুন`
+                    }
+                  />
+                )}
+              />
               {errors.maintenance_type && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
               )}
-              <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
             </div>
           </div>
 

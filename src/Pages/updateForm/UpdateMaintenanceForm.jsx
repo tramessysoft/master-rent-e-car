@@ -28,10 +28,7 @@ const UpdateMaintenanceForm = () => {
     receipt,
   } = updateMaintenanceLoaderData.data;
   const [previewImage, setPreviewImage] = useState(receipt);
-  console.log(
-    "updateMaintenanceLoaderData.data",
-    updateMaintenanceLoaderData.data
-  );
+
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {

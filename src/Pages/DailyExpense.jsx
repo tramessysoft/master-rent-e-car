@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTruck, FaFilter, FaPen } from "react-icons/fa";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { Link } from "react-router-dom";
@@ -26,7 +26,12 @@ const DailyExpense = () => {
       .get("https://api.dropshep.com/api/trip")
       .then((response) => {
         if (response.data.status === "success") {
-          setTrip(response.data.data);
+          const sortedData = response.data.data.sort((a, b) => {
+            const dateTimeA = new Date(`${a.trip_date}T${a.trip_time}`);
+            const dateTimeB = new Date(`${b.trip_date}T${b.trip_time}`);
+            return dateTimeB - dateTimeA; // descending order
+          });
+          setTrip(sortedData);
         }
         setLoading(false);
       })
@@ -35,8 +40,8 @@ const DailyExpense = () => {
         setLoading(false);
       });
   }, []);
+
   if (loading) return <p className="text-center mt-16">Loading trip...</p>;
-  console.log("trip:", trip);
   // export
   // ✅ Correct headers matching your table
   const headers = [
@@ -86,6 +91,15 @@ const DailyExpense = () => {
 
   const exportPDF = () => {
     const doc = new jsPDF();
+    const headers = [
+      { label: "#", key: "index" },
+      { label: "Date", key: "trip_date" },
+      { label: "Car Number", key: "vehicle_number" },
+      { label: "Driver Name", key: "driver_name" },
+      { label: "Trip Price", key: "trip_price" },
+      { label: "Other Cost", key: "totalCost" },
+      { label: "Total Cost", key: "totalTripCost" },
+    ];
     const tableColumn = headers.map((h) => h.label);
     const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
 
@@ -162,6 +176,38 @@ const DailyExpense = () => {
   const handlePageClick = (number) => {
     setCurrentPage(number);
   };
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+    return pages;
+  };
+
   return (
     <main className="bg-gradient-to-br from-gray-100 to-white md:p-6">
       <div className="w-xs md:w-full overflow-hidden overflow-x-auto max-w-7xl mx-auto bg-white/80 backdrop-blur-md shadow-xl rounded-xl p-2 py-10 md:p-8 border border-gray-200">
@@ -169,7 +215,7 @@ const DailyExpense = () => {
         <div className="md:flex items-center justify-between mb-6">
           <h1 className="text-xl font-extrabold text-[#11375B] flex items-center gap-3">
             <FaTruck className="text-[#11375B] text-2xl" />
-            ব্যয়ের তালিকা
+            ট্রিপ ব্যয়ের তালিকা
           </h1>
           <div className="mt-3 md:mt-0 flex gap-2">
             <button
@@ -259,20 +305,23 @@ const DailyExpense = () => {
         </div>
 
         {/* Table */}
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-200">
+        <div className="mt-5 overflow-x-auto rounded-xl">
           <table className="min-w-full text-sm text-left">
+            {/* Table Head */}
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
-                <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3">তারিখ</th>
-                <th className="px-4 py-3">গাড়িনা.</th>
-                <th className="px-4 py-3">ড্রাইভারের নাম</th>
-                <th className="px-4 py-3">ট্রিপ খরচ</th>
-                <th className="px-4 py-3">অন্যান্য খরচ</th>
-                <th className="px-4 py-3">টোটাল খরচ</th>
-                <th className="px-4 py-3 action_column">অ্যাকশন</th>
+                <th className="p-2">#</th>
+                <th className="p-2">তারিখ</th>
+                <th className="p-2">গাড়িনা.</th>
+                <th className="p-2">ড্রাইভারের নাম</th>
+                <th className="p-2">ট্রিপ খরচ</th>
+                <th className="p-2">অন্যান্য খরচ</th>
+                <th className="p-2">টোটাল খরচ</th>
+                <th className="p-2 action_column">অ্যাকশন</th>
               </tr>
             </thead>
+
+            {/* Table Body */}
             <tbody className="text-[#11375B] font-semibold bg-gray-100">
               {currentTrip?.map((item, index) => {
                 const fuel = parseFloat(item.fuel_price ?? "0") || 0;
@@ -283,24 +332,27 @@ const DailyExpense = () => {
                 const totalCost = (fuel + gas + others + commission).toFixed(2);
 
                 return (
-                  <tr key={item.id} className="hover:bg-gray-50 transition-all">
-                    <td className="px-4 py-4 font-bold">
+                  <tr
+                    key={item.id}
+                    className="hover:bg-gray-50 transition-all border border-gray-200"
+                  >
+                    <td className="p-2 font-bold">
                       {indexOfFirstItem + index + 1}
                     </td>
-                    <td className="px-4 py-4">{item.trip_date}</td>
-                    <td className="px-4 py-4">{item.vehicle_number}</td>
-                    <td className="px-4 py-4">{item.driver_name}</td>
-                    <td className="px-4 py-4">
+                    <td className="p-2">{item.trip_date}</td>
+                    <td className="p-2">{item.vehicle_number}</td>
+                    <td className="p-2">{item.driver_name}</td>
+                    <td className="p-2">
                       {parseFloat(item.trip_price ?? "0").toFixed(2)}
                     </td>
-                    <td className="px-4 py-4">{totalCost}</td>
-                    <td className="px-4 py-4">
+                    <td className="p-2">{totalCost}</td>
+                    <td className="p-2">
                       {(
                         parseFloat(item.trip_price ?? "0") +
                         parseFloat(totalCost)
                       ).toFixed(2)}
                     </td>
-                    <td className="action_column">
+                    <td className="p-2">
                       <div className="flex justify-center">
                         <Link to={`/UpdateExpenseForm/${item.id}`}>
                           <button className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer">
@@ -313,41 +365,89 @@ const DailyExpense = () => {
                 );
               })}
             </tbody>
+
+            {/* Table Footer */}
+            <tfoot className="bg-[#EFF6FF] text-primary font-semibold border border-gray-200">
+              <tr>
+                <td colSpan="4" className="p-2 text-right">
+                  মোট:
+                </td>
+                <td className="p-2">
+                  {currentTrip
+                    ?.reduce(
+                      (sum, item) => sum + parseFloat(item.trip_price ?? "0"),
+                      0
+                    )
+                    .toFixed(2)}
+                </td>
+                <td className="p-2">
+                  {currentTrip
+                    ?.reduce((sum, item) => {
+                      const fuel = parseFloat(item.fuel_price ?? "0") || 0;
+                      const gas = parseFloat(item.gas_price ?? "0") || 0;
+                      const others =
+                        parseFloat(item.other_expenses ?? "0") || 0;
+                      const commission =
+                        parseFloat(item.driver_percentage ?? "0") || 0;
+                      return sum + fuel + gas + others + commission;
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="p-2">
+                  {currentTrip
+                    ?.reduce((sum, item) => {
+                      const trip = parseFloat(item.trip_price ?? "0") || 0;
+                      const fuel = parseFloat(item.fuel_price ?? "0") || 0;
+                      const gas = parseFloat(item.gas_price ?? "0") || 0;
+                      const others =
+                        parseFloat(item.other_expenses ?? "0") || 0;
+                      const commission =
+                        parseFloat(item.driver_percentage ?? "0") || 0;
+                      return sum + trip + fuel + gas + others + commission;
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="p-2"></td>
+              </tr>
+            </tfoot>
           </table>
         </div>
+
         {/* pagination */}
         <div className="mt-10 flex justify-center">
-          <div className="space-x-2 flex items-center">
+          <div className="flex items-center space-x-2">
             <button
               onClick={handlePrevPage}
-              className={`p-2 ${
-                currentPage === 1 ? "bg-gray-300" : "bg-primary text-white"
-              } rounded-sm`}
               disabled={currentPage === 1}
+              className="p-2 rounded-sm text-white bg-primary cursor-pointer hover:bg-gray-200 hover:text-primary transition-all duration-300"
             >
               <GrFormPrevious />
             </button>
-            {[...Array(totalPages).keys()].map((number) => (
-              <button
-                key={number + 1}
-                onClick={() => handlePageClick(number + 1)}
-                className={`px-3 py-1 rounded-sm ${
-                  currentPage === number + 1
-                    ? "bg-primary text-white hover:bg-gray-200 hover:text-primary transition-all duration-300 cursor-pointer"
-                    : "bg-gray-200 hover:bg-primary hover:text-white transition-all cursor-pointer"
-                }`}
-              >
-                {number + 1}
-              </button>
-            ))}
+
+            {getPageNumbers().map((number, idx) =>
+              number === "..." ? (
+                <span key={`dots-${idx}`} className="px-2 text-gray-500">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={`${number}-${idx}`}
+                  onClick={() => handlePageClick(number)}
+                  className={`w-8 h-8 rounded-sm flex items-center justify-center text-sm font-medium hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer ${
+                    currentPage === number
+                      ? "bg-primary text-white"
+                      : "bg-gray-200 text-primary hover:bg-gray-200"
+                  }`}
+                >
+                  {number}
+                </button>
+              )
+            )}
+
             <button
               onClick={handleNextPage}
-              className={`p-2 ${
-                currentPage === totalPages
-                  ? "bg-gray-300"
-                  : "bg-primary text-white"
-              } rounded-sm`}
               disabled={currentPage === totalPages}
+              className="p-2 rounded-sm text-white bg-primary cursor-pointer hover:bg-gray-200 hover:text-primary transition-all duration-300"
             >
               <GrFormNext />
             </button>

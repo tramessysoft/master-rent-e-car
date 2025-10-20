@@ -20,8 +20,6 @@ const AddDriverForm = () => {
   const driverDateRef = useRef(null);
 
   const onSubmit = async (data) => {
-    console.log("add car data", data);
-
     try {
       const formData = new FormData();
       for (const key in data) {
@@ -34,7 +32,7 @@ const AddDriverForm = () => {
         formData
       );
       const resData = response.data;
-      console.log("resData", resData);
+
       if (resData.status === "success") {
         toast.success("তথ্য সফলভাবে সংরক্ষণ হয়েছে!", {
           position: "top-right",

@@ -34,7 +34,7 @@ const Header = ({ setMobileSidebarOpen }) => {
         </div>
 
         {/* Search */}
-        <div className="hidden md:block relative">
+        {/* <div className="hidden md:block relative">
           <input
             type="text"
             className="border border-gray-300 rounded-md outline-none w-96 h-9 px-5"
@@ -43,7 +43,7 @@ const Header = ({ setMobileSidebarOpen }) => {
           <div className="absolute top-0 right-0 bg-primary py-2.5 w-10 flex items-center justify-center rounded-r-md text-white hover:bg-secondary cursor-pointer">
             <FaMagnifyingGlass />
           </div>
-        </div>
+        </div> */}
 
         {/* Admin Dropdown */}
         <div className="relative bg-white p-2 rounded-md flex gap-2 items-center">

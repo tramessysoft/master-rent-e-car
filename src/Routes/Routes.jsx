@@ -29,6 +29,10 @@ import UpdateDriverForm from "../Pages/updateForm/UpdateDriverForm";
 import UpdateDailyIncomeForm from "../Pages/updateForm/UpdateDailyIncomeForm";
 import UpdateExpenseForm from "../Pages/updateForm/UpdateExpenseForm";
 import AdminRoute from "./AdminRoute";
+import MonthlyStatement from "../Pages/MonthlyStatement";
+import Booking from "../Pages/Booking";
+import AddBooking from "../Pages/AddBooking";
+import UpdateBooking from "../Pages/UpdateBooking";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -43,59 +47,59 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "CarList",
+        path: "/CarList",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <CarList />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "AddCarForm",
+        path: "/AddCarForm",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <AddCarForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "UpdateCarForm/:id",
+        path: "/UpdateCarForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateCarForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/vehicle/${params.id}`),
       },
       {
-        path: "DriverList",
+        path: "/DriverList",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <DriverList />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "AddDriverForm",
+        path: "/AddDriverForm",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <AddDriverForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "UpdateDriverForm/:id",
+        path: "/UpdateDriverForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateDriverForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/driver/${params.id}`),
       },
       {
-        path: "TripList",
+        path: "/TripList",
         element: (
           <PrivateRoute>
             <TripList />
@@ -103,7 +107,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "AddTripForm",
+        path: "/AddTripForm",
         element: (
           <PrivateRoute>
             <AddTripForm />
@@ -111,87 +115,113 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "UpdateTripForm/:id",
+        path: "/UpdateTripForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateTripForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/trip/${params.id}`),
       },
       {
-        path: "Fuel",
+        path: "/Fuel",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <Fuel />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "FuelForm",
+        path: "/FuelForm",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <FuelForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "UpdateFuelForm/:id",
+        path: "/UpdateFuelForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateFuelForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/fuel/${params.id}`),
       },
       {
-        path: "Parts",
+        path: "/Parts",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <Parts />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "UpdatePartsForm/:id",
+        path: "/UpdatePartsForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdatePartsForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/parts/${params.id}`),
       },
       {
-        path: "Maintenance",
+        path: "/Maintenance",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <Maintenance />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "MaintenanceForm",
+        path: "/MaintenanceForm",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <MaintenanceForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "UpdateMaintenanceForm/:id",
+        path: "/UpdateMaintenanceForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateMaintenanceForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/maintenance/${params.id}`),
       },
       {
-        path: "DailyIncome",
+        path: "/Booking",
+        element: (
+          <AdminRoute>
+            <Booking />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/AddBooking",
+        element: (
+          <AdminRoute>
+            <AddBooking />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/UpdateBooking/:id",
+        element: (
+          <AdminRoute>
+            <UpdateBooking />
+          </AdminRoute>
+        ),
+        loader: ({ params }) =>
+          fetch(`https://api.dropshep.com/api/booking/${params.id}`),
+      },
+      {
+        path: "/DailyIncome",
         element: (
           <AdminRoute>
             <DailyIncome />
@@ -199,15 +229,23 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "DailyExpense",
+        path: "/DailyExpense",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <DailyExpense />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {
-        path: "AllUsers",
+        path: "/MonthlyStatement",
+        element: (
+          <AdminRoute>
+            <MonthlyStatement />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/AllUsers",
         element: (
           <AdminRoute>
             <AllUsers />
@@ -215,7 +253,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "AddUserForm",
+        path: "/AddUserForm",
         element: (
           <AdminRoute>
             <AddUserForm />
@@ -223,25 +261,25 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "UpdateUsersForm/:id",
+        path: "/UpdateUsersForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateUsersForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/users/${params.id}`),
       },
       {
-        path: "Login",
+        path: "/Login",
         element: <Login />,
       },
       {
-        path: "ResetPass",
+        path: "/ResetPass",
         element: <ResetPass />,
       },
       {
-        path: "UpdateDailyIncomeForm/:id",
+        path: "/UpdateDailyIncomeForm/:id",
         element: (
           <AdminRoute>
             <UpdateDailyIncomeForm />
@@ -251,11 +289,11 @@ export const router = createBrowserRouter([
           fetch(`https://api.dropshep.com/api/trip/${params.id}`),
       },
       {
-        path: "UpdateExpenseForm/:id",
+        path: "/UpdateExpenseForm/:id",
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <UpdateExpenseForm />
-          </PrivateRoute>
+          </AdminRoute>
         ),
         loader: ({ params }) =>
           fetch(`https://api.dropshep.com/api/trip/${params.id}`),

@@ -23,6 +23,7 @@ const AllUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // search
   const [searchTerm, setSearchTerm] = useState("");
+  // fetch all users
   useEffect(() => {
     axios
       .get("https://api.dropshep.com/api/users")
@@ -127,6 +128,14 @@ const AllUsers = () => {
 
   const exportPDF = () => {
     const doc = new jsPDF();
+    const headers = [
+      { label: "#", key: "index" },
+      { label: "Name", key: "name" },
+      { label: "Mobile", key: "phone" },
+      { label: "Email", key: "email" },
+      { label: "Role", key: "role" },
+      { label: "Status", key: "status" },
+    ];
     const tableColumn = headers.map((h) => h.label);
     const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
 
@@ -227,30 +236,33 @@ const AllUsers = () => {
           </div>
         </div>
         {/* Table */}
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-200">
+        <div className="mt-5 overflow-x-auto rounded-xl">
           <table className="min-w-full text-sm text-left">
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
-                <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3">নাম</th>
-                <th className="px-4 py-3">মোবাইল</th>
-                <th className="px-4 py-3">ইমেইল</th>
-                <th className="px-4 py-3">ধরন</th>
-                <th className="px-4 py-3">স্ট্যাটাস</th>
-                <th className="px-4 py-3 action_column">অ্যাকশন</th>
+                <th className="p-2">#</th>
+                <th className="p-2">নাম</th>
+                <th className="p-2">মোবাইল</th>
+                <th className="p-2">ইমেইল</th>
+                <th className="p-2">ধরন</th>
+                <th className="p-2">স্ট্যাটাস</th>
+                <th className="p-2 action_column">অ্যাকশন</th>
               </tr>
             </thead>
             <tbody className="text-[#11375B] font-semibold bg-gray-100">
               {currentUsers?.map((user, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition-all">
-                  <td className="px-4 py-4 font-bold">
+                <tr
+                  key={index}
+                  className="hover:bg-gray-50 transition-all border border-gray-200"
+                >
+                  <td className="p-2 font-bold">
                     {indexOfFirstItem + index + 1}
                   </td>
-                  <td className="px-4 py-4">{user.name}</td>
-                  <td className="px-4 py-4">{user.phone}</td>
-                  <td className="px-4 py-4">{user.email}</td>
-                  <td className="px-4 py-4">{user.role}</td>
-                  <td className="px-4 py-4">{user.status}</td>
+                  <td className="p-2">{user.name}</td>
+                  <td className="p-2">{user.phone}</td>
+                  <td className="p-2">{user.email}</td>
+                  <td className="p-2">{user.role}</td>
+                  <td className="p-2">{user.status}</td>
                   <td className="action_column">
                     <div className="flex gap-1 justify-center">
                       <Link to={`/UpdateUsersForm/${user.id}`}>

@@ -46,7 +46,6 @@ const Fuel = () => {
 
   if (loading) return <p className="text-center mt-16">Loading fuel...</p>;
 
-  console.log("fuel", fuel);
   // export functionality
   const headers = [
     { label: "#", key: "index" },
@@ -85,13 +84,13 @@ const Fuel = () => {
 
     const tableColumn = [
       "#",
-      "ড্রাইভারের নাম",
-      "গাড়ির নাম",
-      "ফুয়েলের ধরন",
-      "ফুয়েলিং তারিখ",
-      "গ্যালন/লিটার",
-      "লিটার প্রতি খরচ",
-      "সকল খরচ",
+      "Driver Name",
+      "Car Name",
+      "Fuel Type",
+      "Fueling Date",
+      "Gallon/Liter",
+      "Liter per cost",
+      "Total cost",
     ];
 
     const tableRows = fuel.map((dt, index) => [
@@ -305,35 +304,38 @@ const Fuel = () => {
           </div>
         )}
         {/* Table */}
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-200">
+        <div className="mt-5 overflow-x-auto rounded-xl">
           <table className="min-w-full text-sm text-left">
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
-                <th className="px-2 md:px-4 py-3">#</th>
-                <th className="px-2 md:px-4 py-3">ড্রাইভারের নাম</th>
-                <th className="px-2 md:px-4 py-3">গাড়ির নাঃ</th>
-                <th className="px-2 md:px-4 py-3">ফুয়েলের ধরন</th>
-                <th className="px-2 md:px-4 py-3">ফুয়েলিং তারিখ</th>
-                <th className="px-2 md:px-4 py-3">গ্যালন/লিটার</th>
-                <th className="px-2 md:px-4 py-3">লিটার প্রতি খরচ</th>
-                <th className="px-2 md:px-4 py-3">সকল খরচ</th>
-                <th className="px-2 md:px-4 py-3 action_column">অ্যাকশন</th>
+                <th className="px-2 md:p-2">#</th>
+                <th className="px-2 md:p-2">ড্রাইভারের নাম</th>
+                <th className="px-2 md:p-2">গাড়ির নাঃ</th>
+                <th className="px-2 md:p-2">ফুয়েলের ধরন</th>
+                <th className="px-2 md:p-2">ফুয়েলিং তারিখ</th>
+                <th className="px-2 md:p-2">গ্যালন/লিটার</th>
+                <th className="px-2 md:p-2">লিটার প্রতি খরচ</th>
+                <th className="px-2 md:p-2">সকল খরচ</th>
+                <th className="px-2 md:p-2 action_column">অ্যাকশন</th>
               </tr>
             </thead>
             <tbody className="text-[#11375B] font-semibold bg-gray-100">
               {currentFuel?.map((dt, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition-all">
-                  <td className="px-4 py-4 font-bold">
+                <tr
+                  key={index}
+                  className="hover:bg-gray-50 transition-all border border-gray-200"
+                >
+                  <td className="p-2 font-bold">
                     {indexOfFirstItem + index + 1}
                   </td>
-                  <td className="px-4 py-4">{dt.driver_name}</td>
-                  <td className="px-4 py-4">{dt.vehicle_number}</td>
-                  <td className="px-4 py-4">{dt.type}</td>
-                  <td className="px-4 py-4">{dt.date_time}</td>
-                  <td className="px-4 py-4">{dt.quantity}</td>
-                  <td className="px-4 py-4">{dt.price}</td>
-                  <td className="px-4 py-4">{dt.quantity * dt.price}.00</td>
-                  <td className="px-4 py-4 action_column">
+                  <td className="p-2">{dt.driver_name}</td>
+                  <td className="p-2">{dt.vehicle_number}</td>
+                  <td className="p-2">{dt.type}</td>
+                  <td className="p-2">{dt.date_time}</td>
+                  <td className="p-2">{dt.quantity}</td>
+                  <td className="p-2">{dt.price}</td>
+                  <td className="p-2">{dt.quantity * dt.price}.00</td>
+                  <td className="p-2 action_column">
                     <div className="flex gap-2">
                       <Link to={`/UpdateFuelForm/${dt.id}`}>
                         <button className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer">

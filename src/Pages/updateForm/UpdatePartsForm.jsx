@@ -11,7 +11,7 @@ const UpdatePartsForm = () => {
   const partsDateRef = useRef(null);
   const updatePartsLoaderData = useLoaderData();
   const { id, name, date } = updatePartsLoaderData.data;
-  console.log("updatePartsLoaderData", updatePartsLoaderData.data);
+
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
@@ -25,7 +25,6 @@ const UpdatePartsForm = () => {
       );
 
       const resData = response.data;
-      console.log("resData", resData);
 
       if (resData.status === "success") {
         toast.success("পার্টস সফলভাবে আপডেট হয়েছে!", { position: "top-right" });

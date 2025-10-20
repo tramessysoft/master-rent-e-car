@@ -36,7 +36,6 @@ const UpdateDriverForm = () => {
       setValue("license_image", file);
     }
   };
-  console.log("updateDriverLoaderData", updateDriverLoaderData.data);
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();

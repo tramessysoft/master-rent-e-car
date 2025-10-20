@@ -37,8 +37,6 @@ const UpdateCarForm = () => {
   const fitnessDateRef = useRef(null);
   // select driver
   const [drivers, setDrivers] = useState([]);
-
-  console.log("updateCarLoaderData", updateCarLoaderData.data.vehicle_name);
   useEffect(() => {
     fetch("https://api.dropshep.com/api/driver")
       .then((response) => response.json())
@@ -64,8 +62,6 @@ const UpdateCarForm = () => {
       );
 
       const resData = response.data;
-      console.log("resData", resData);
-
       if (resData.status === "Vehicle updated successfully") {
         toast.success("গাড়ি সফলভাবে আপডেট হয়েছে!", { position: "top-right" });
       } else {
@@ -133,32 +129,27 @@ const UpdateCarForm = () => {
               className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
             >
               <option value={category}>{category}</option>
-              <option value="Truck">ট্রাক</option>
-              <option value="Pickup">পিকআপ</option>
-              <option value="Covered Van">কভার্ড ভ্যান</option>
-              <option value="Trailer">ট্রেইলর</option>
-              <option value="Fridge Van">ফ্রিজার ভ্যান</option>
-              <option value="Car">কার</option>
+              <option value="X Corolla">X Corolla</option>
+              <option value="Axio">Axio</option>
+              <option value="Allion">Allion</option>
+              <option value="Premio">Premio</option>
+              <option value="X Noha">X Noha</option>
+              <option value="Hiace">Hiace</option>
             </select>
             <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
           </div>
           <div className="relative mt-2 md:mt-0 w-full">
             <label className="text-primary text-sm font-semibold">
-              গাড়ির সাইজ
+              গাড়ির আসন সংখ্যা
             </label>
             <select
               {...register("size")}
               className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
             >
               <option value={size}>{size}</option>
-              <option value="7 Feet">7 Feet</option>
-              <option value="9 Feet">9 Feet</option>
-              <option value="12 Feet">12 Feet</option>
-              <option value="14 Feet">14 Feet</option>
-              <option value="16 Feet">16 Feet</option>
-              <option value="18 Feet">18 Feet</option>
-              <option value="20 Feet">20 Feet</option>
-              <option value="23 Feet">23 Feet</option>
+              <option value="4">৪</option>
+              <option value="7">৭</option>
+              <option value="11">১১</option>
             </select>
             <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
           </div>
@@ -174,7 +165,7 @@ const UpdateCarForm = () => {
               {...register("registration_number")}
               defaultValue={registration_number}
               type="text"
-              placeholder=" রেজিস্ট্রেশন নাম্বার..."
+              placeholder="রেজিস্ট্রেশন নাম্বার..."
               className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
             />
           </div>
@@ -187,13 +178,9 @@ const UpdateCarForm = () => {
               className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
             >
               <option value={registration_serial}>{registration_serial}</option>
-              <option value="Ta">ট</option>
-              <option value="Tha">ঠ</option>
-              <option value="Da">ড</option>
-              <option value="Dha">ঢ</option>
-              <option value="Na">ন</option>
-              <option value="M">ম</option>
-              <option value="Sh">শ</option>
+              <option value="Ga">গ</option>
+              <option value="GH">ঘ</option>
+              <option value="Ca">চ</option>
             </select>
             <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
           </div>

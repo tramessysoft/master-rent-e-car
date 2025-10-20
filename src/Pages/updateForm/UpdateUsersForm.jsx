@@ -41,7 +41,6 @@ const UpdateUsersForm = () => {
       );
 
       const resData = response.data;
-      console.log("resData", resData);
 
       if (resData.status === "success") {
         toast.success("ইউজার সফলভাবে আপডেট হয়েছে!", { position: "top-right" });

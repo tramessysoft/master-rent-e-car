@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTruck, FaFilter, FaPen } from "react-icons/fa";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
@@ -34,7 +34,6 @@ const DailyIncome = () => {
     };
     fetchTrips();
   }, []);
-  console.log("trips", trips);
   // search
   const filteredIncome = trips.filter((dt) => {
     const term = searchTerm.toLowerCase();
@@ -108,6 +107,16 @@ const DailyIncome = () => {
   // ✅ Export PDF function
   const exportPDF = () => {
     const doc = new jsPDF();
+    const headers = [
+      { label: "#", key: "index" },
+      { label: "Date", key: "trip_date" },
+      { label: "Car", key: "vehicle_number" },
+      { label: "Load", key: "load_point" },
+      { label: "Unload", key: "unload_point" },
+      { label: "Trip Price", key: "trip_price" },
+      { label: "Total Cost", key: "totalCost" }, // corrected key
+      { label: "Profit", key: "profit" }, // corrected key
+    ];
     const tableColumn = headers.map((h) => h.label);
     const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
 
@@ -163,7 +172,37 @@ const DailyIncome = () => {
   const handlePageClick = (number) => {
     setCurrentPage(number);
   };
-
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+    return pages;
+  };
   return (
     <main className="bg-gradient-to-br from-gray-100 to-white md:p-6">
       <div className="w-xs md:w-full overflow-hidden overflow-x-auto max-w-7xl mx-auto bg-white/80 backdrop-blur-md shadow-xl rounded-xl p-2 py-10 md:p-8 border border-gray-200">
@@ -261,72 +300,108 @@ const DailyIncome = () => {
           </div>
         </div>
         {/* Table */}
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-200">
+        <div className="mt-5 overflow-x-auto rounded-xl">
           <table className="min-w-full text-sm text-left">
+            {/* Table Head */}
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
-                <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3">তারিখ</th>
-                <th className="px-4 py-3">গাড়ি</th>
-                <th className="px-4 py-3">লোড</th>
-                <th className="px-4 py-3">আনলোড</th>
-                {/* <th className="px-4 py-3">কাস্টমার</th> */}
-                <th className="px-4 py-3">ট্রিপের ভাড়া</th>
-                {/* <th className="px-4 py-3">জরিমানা</th> */}
-                <th className="px-4 py-3">চলমানখরচ</th>
-                <th className="px-4 py-3">লাভ</th>
-                <th className="px-4 py-3 action_column">অ্যাকশন</th>
+                <th className="p-2">#</th>
+                <th className="p-2">তারিখ</th>
+                <th className="p-2">গাড়ি</th>
+                <th className="p-2">লোড</th>
+                <th className="p-2">আনলোড</th>
+                <th className="p-2">ট্রিপের ভাড়া</th>
+                <th className="p-2">চলমানখরচ</th>
+                <th className="p-2">লাভ</th>
+                <th className="p-2 action_column">অ্যাকশন</th>
               </tr>
             </thead>
+
+            {/* Table Body */}
             <tbody className="text-[#11375B] font-semibold bg-gray-100">
-              {currentTrips.map((trip, index) => (
-                <tr
-                  key={trip.id || index}
-                  className="hover:bg-gray-50 transition-all"
-                >
-                  <td className="px-4 py-4 font-bold">
-                    {indexOfFirstItem + index + 1}
-                  </td>
-                  <td className="px-4 py-4">
-                    {new Date(trip.trip_date).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="px-4 py-4">{trip.vehicle_number}</td>
-                  <td className="px-4 py-4">{trip.load_point}</td>
-                  <td className="px-4 py-4">{trip.unload_point}</td>
-                  <td className="px-4 py-4">{trip.trip_price}</td>
-                  <td className="px-4 py-4">
-                    {(
-                      Number(trip.other_expenses || 0) +
-                      Number(trip.gas_price || 0) +
-                      Number(trip.fuel_price || 0) +
-                      Number(trip.driver_percentage || 0)
-                    ).toFixed(2)}
-                    00
-                  </td>
-                  <td className="px-4 py-4">
-                    {Number(trip.trip_price || 0) -
-                      (
-                        Number(trip.other_expenses || 0) +
-                        Number(trip.gas_price || 0) +
-                        Number(trip.fuel_price || 0) +
-                        Number(trip.driver_percentage || 0)
-                      ).toFixed(2)}
-                    {/* {trip.profit || "00"} */}
-                  </td>
-                  <td className="action_column">
-                    <div className="flex justify-center">
-                      <Link to={`/UpdateDailyIncomeForm/${trip.id}`}>
-                        <button className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer">
-                          <FaPen className="text-[12px]" />
-                        </button>
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {currentTrips.map((trip, index) => {
+                const tripPrice = Number(trip.trip_price || 0);
+                const expense =
+                  Number(trip.other_expenses || 0) +
+                  Number(trip.gas_price || 0) +
+                  Number(trip.fuel_price || 0) +
+                  Number(trip.driver_percentage || 0);
+                const profit = tripPrice - expense;
+
+                return (
+                  <tr
+                    key={trip.id || index}
+                    className="hover:bg-gray-50 transition-all border border-gray-200"
+                  >
+                    <td className="p-2 font-bold">
+                      {indexOfFirstItem + index + 1}
+                    </td>
+                    <td className="p-2">
+                      {new Date(trip.trip_date).toLocaleDateString("en-GB")}
+                    </td>
+                    <td className="p-2">{trip.vehicle_number}</td>
+                    <td className="p-2">{trip.load_point}</td>
+                    <td className="p-2">{trip.unload_point}</td>
+                    <td className="p-2">{tripPrice.toFixed(2)}</td>
+                    <td className="p-2">{expense.toFixed(2)}</td>
+                    <td className="p-2">{profit.toFixed(2)}</td>
+                    <td className="action_column">
+                      <div className="flex justify-center">
+                        <Link to={`/UpdateDailyIncomeForm/${trip.id}`}>
+                          <button className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer">
+                            <FaPen className="text-[12px]" />
+                          </button>
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
+
+            {/* Table Footer */}
+            <tfoot className="bg-[#EFF6FF] text-[#11375B] font-semibold border border-gray-200">
+              <tr>
+                <td colSpan="5" className="p-2 text-right">
+                  মোট:
+                </td>
+                <td className="p-2">
+                  {currentTrips
+                    .reduce((sum, t) => sum + Number(t.trip_price || 0), 0)
+                    .toFixed(2)}
+                </td>
+                <td className="p-2">
+                  {currentTrips
+                    .reduce(
+                      (sum, t) =>
+                        sum +
+                        Number(t.other_expenses || 0) +
+                        Number(t.gas_price || 0) +
+                        Number(t.fuel_price || 0) +
+                        Number(t.driver_percentage || 0),
+                      0
+                    )
+                    .toFixed(2)}
+                </td>
+                <td className="p-2">
+                  {currentTrips
+                    .reduce((sum, t) => {
+                      const trip = Number(t.trip_price || 0);
+                      const expense =
+                        Number(t.other_expenses || 0) +
+                        Number(t.gas_price || 0) +
+                        Number(t.fuel_price || 0) +
+                        Number(t.driver_percentage || 0);
+                      return sum + (trip - expense);
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
         </div>
+
         {/* pagination */}
         <div className="mt-10 flex justify-center">
           <div className="space-x-2 flex items-center">
@@ -339,19 +414,25 @@ const DailyIncome = () => {
             >
               <GrFormPrevious />
             </button>
-            {[...Array(totalPages).keys()].map((number) => (
-              <button
-                key={number + 1}
-                onClick={() => handlePageClick(number + 1)}
-                className={`px-3 py-1 rounded-sm ${
-                  currentPage === number + 1
-                    ? "bg-primary text-white hover:bg-gray-200 hover:text-primary transition-all duration-300 cursor-pointer"
-                    : "bg-gray-200 hover:bg-primary hover:text-white transition-all cursor-pointer"
-                }`}
-              >
-                {number + 1}
-              </button>
-            ))}
+            {getPageNumbers().map((number, idx) =>
+              number === "..." ? (
+                <span key={`dots-${idx}`} className="px-2 text-gray-500">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={`${number}-${idx}`}
+                  onClick={() => handlePageClick(number)}
+                  className={`w-8 h-8 rounded-sm flex items-center justify-center text-sm font-medium hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer ${
+                    currentPage === number
+                      ? "bg-primary text-white"
+                      : "bg-gray-200 text-primary hover:bg-gray-200"
+                  }`}
+                >
+                  {number}
+                </button>
+              )
+            )}
             <button
               onClick={handleNextPage}
               className={`p-2 ${

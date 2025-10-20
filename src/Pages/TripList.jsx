@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import {
   FaTruck,
@@ -18,7 +18,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { AuthContext } from "../providers/AuthProvider";
 const TripList = () => {
+  const { user } = useContext(AuthContext);
+  console.log("users", user.data.user.role);
   const [trip, setTrip] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,7 @@ const TripList = () => {
   const [selectedTripId, setselectedTripId] = useState(null);
   const toggleModal = () => setIsOpen(!isOpen);
 
-  // get single driver info by id
+  // get single trip info by id
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedTrip, setselectedTrip] = useState(null);
   // search
@@ -43,17 +46,19 @@ const TripList = () => {
       .get("https://api.dropshep.com/api/trip")
       .then((response) => {
         if (response.data.status === "success") {
-          setTrip(response.data.data);
+          const sortedData = response.data.data.sort((a, b) => {
+            return new Date(b.trip_date) - new Date(a.trip_date);
+          });
+          setTrip(sortedData);
         }
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching driver data:", error);
+        console.error("Error fetching trip data:", error);
         setLoading(false);
       });
   }, []);
   if (loading) return <p className="text-center mt-16">Loading trip...</p>;
-  console.log("trip:", trip);
   // delete by id
   const handleDelete = async (id) => {
     try {
@@ -117,7 +122,12 @@ const TripList = () => {
     const gas = parseFloat(dt.gas_price ?? "0") || 0;
     const others = parseFloat(dt.other_expenses ?? "0") || 0;
     const commission = parseFloat(dt.driver_percentage ?? "0") || 0;
-    const totalCost = (fuel + gas + others + commission).toFixed(2);
+    const totalCost = (
+      Number(fuel) +
+      Number(gas) +
+      Number(others) +
+      Number(commission)
+    ).toFixed(2);
     const profit = (dt.trip_price - totalCost).toFixed(2);
 
     return {
@@ -136,22 +146,74 @@ const TripList = () => {
   });
   // export excel
   const exportExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(csvData);
+    // Define English headers you want in the Excel file
+    const headers = [
+      "Index",
+      "Trip Date",
+      "Driver Name",
+      "Driver Contact",
+      "Driver Percentage",
+      "Load Point",
+      "Unload Point",
+      "Trip Time",
+      "Total Cost",
+      "Trip Price",
+      "Profit",
+    ];
+
+    // Map the csvData to match the headers
+    const formattedData = csvData.map((item, index) => ({
+      Index: index + 1,
+      "Trip Date": item.trip_date,
+      "Driver Name": item.driver_name,
+      "Driver Contact": item.driver_contact,
+      "Driver Percentage": item.driver_percentage,
+      "Load Point": item.load_point,
+      "Unload Point": item.unload_point,
+      "Trip Time": item.trip_time,
+      "Total Cost": item.totalCost,
+      "Trip Price": item.trip_price,
+      Profit: item.profit,
+    }));
+
+    // Generate worksheet with custom header order
+    const worksheet = XLSX.utils.json_to_sheet(formattedData, {
+      header: headers,
+    });
+
+    // Create and export workbook
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Trip Data");
+
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
+
     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(data, "trip_data.xlsx");
   };
-  const exportPDF = () => {
-    const doc = new jsPDF();
-    const tableColumn = headers.map((h) => h.label);
 
+  // pdf
+  const exportPDF = () => {
+    const headers = [
+      { label: "#", key: "index" },
+      { label: "Date", key: "trip_date" },
+      { label: "Driver Name", key: "driver_name" },
+      { label: "Contact", key: "driver_contact" },
+      { label: "Commission", key: "driver_percentage" },
+      { label: "Load Point", key: "load_point" },
+      { label: "Unload Point", key: "unload_point" },
+      { label: "Trip Time", key: "trip_time" },
+      { label: "Total Cost", key: "totalCost" },
+      { label: "Trip Fare", key: "trip_price" },
+      { label: "Profit", key: "profit" },
+    ];
+
+    const tableColumn = headers.map((h) => h.label);
     const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
 
+    const doc = new jsPDF();
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
@@ -160,6 +222,7 @@ const TripList = () => {
 
     doc.save("trip_data.pdf");
   };
+
   const printTable = () => {
     // hide specific column
     const actionColumns = document.querySelectorAll(".action_column");
@@ -195,6 +258,7 @@ const TripList = () => {
       dt.load_point?.toLowerCase().includes(term) ||
       dt.unload_point?.toLowerCase().includes(term) ||
       dt.driver_name?.toLowerCase().includes(term) ||
+      dt.customer?.toLowerCase().includes(term) ||
       dt.driver_contact?.toLowerCase().includes(term) ||
       String(dt.driver_percentage).includes(term) ||
       dt.fuel_price?.toLowerCase().includes(term) ||
@@ -223,6 +287,37 @@ const TripList = () => {
   };
   const handlePageClick = (number) => {
     setCurrentPage(number);
+  };
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+    return pages;
   };
   return (
     <main className="bg-gradient-to-br from-gray-100 to-white md:p-6">
@@ -328,18 +423,22 @@ const TripList = () => {
         )}
 
         {/* Table */}
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-200">
+        <div className="mt-5 overflow-x-auto rounded-xl">
           <table className="min-w-full text-sm text-left">
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
-                <th className="px-2 py-3">#</th>
-                <th className="px-2 py-3">তারিখ</th>
-                <th className="px-2 py-3">ড্রাইভার ইনফো</th>
-                <th className="px-2 py-3">ট্রিপ এবং গন্তব্য</th>
-                <th className="px-2 py-3">ট্রিপের খরচ</th>
-                <th className="px-2 py-3">ট্রিপের ভাড়া</th>
-                <th className="px-2 py-3">টোটাল আয়</th>
-                <th className="px-2 py-3 action_column">অ্যাকশন</th>
+                <th className="p-2">#</th>
+                <th className="p-2">তারিখ</th>
+                <th className="p-2">ড্রাইভার ইনফো</th>
+                <th className="p-2">ট্রিপ এবং গন্তব্য</th>
+                <th className="p-2">কাস্টমারের তথ্য</th>
+                <th className="p-2">ট্রিপের খরচ</th>
+                <th className="p-2">ট্রিপের ভাড়া</th>
+                {user.data.user.role === "User" ? (
+                  ""
+                ) : (
+                  <th className="p-2 action_column">অ্যাকশন</th>
+                )}
               </tr>
             </thead>
             <tbody className="text-[#11375B] font-semibold bg-gray-100">
@@ -350,62 +449,71 @@ const TripList = () => {
                 const others = parseFloat(dt.other_expenses ?? "0") || 0;
                 const commision = dt.driver_percentage;
                 const totalCost = (
-                  demarage +
-                  fuel +
-                  gas +
-                  others +
-                  commision
+                  Number(demarage) +
+                  Number(fuel) +
+                  Number(gas) +
+                  Number(others) +
+                  Number(commision)
                 ).toFixed(2);
 
                 return (
                   <tr
                     key={index}
-                    className="hover:bg-gray-50 transition-all border-b border-gray-300"
+                    className="hover:bg-gray-50 transition-all border-b border-gray-200"
                   >
-                    <td className="px-2 py-3 font-bold">
+                    <td className="p-2 font-bold">
                       {indexOfFirstItem + index + 1}
                     </td>
-                    <td className="px-2 py-3">{dt.trip_date}</td>
-                    <td className="px-2 py-3">
+                    <td className="p-2">{dt.trip_date}</td>
+                    <td className="p-2">
                       <p>নামঃ {dt.driver_name}</p>
                       <p>মোবাইলঃ {dt.driver_contact}</p>
                       <p>কমিশনঃ {dt.driver_percentage}</p>
                     </td>
-                    <td className="px-2 py-4">
+                    <td className="p-2">
                       <p>তারিখঃ {dt.trip_date}</p>
-                      <p>লোড পয়েন্টঃ {dt.load_point}</p>
-                      <p>আনলোড পয়েন্টঃ {dt.unload_point}</p>
+                      <p>পিকআপ পয়েন্টঃ {dt.load_point}</p>
+                      <p>ড্রপ পয়েন্টঃ {dt.unload_point}</p>
                       <p>ট্রিপের সময়ঃ {dt.trip_time}</p>
                     </td>
-                    <td className="px-2 py-3">{totalCost}</td>
-                    <td className="px-2 py-3">{dt.trip_price}</td>
-                    <td className="px-2 py-3">
-                      {dt.trip_price - totalCost}.00
+                    <td className="p-2">
+                      <p>
+                        কাস্টমারের নামঃ <p>{dt.customer}</p>
+                      </p>
+                      <p>
+                        কাস্টমারের মোবাইলঃ <p>{dt.customer_mobile}</p>
+                      </p>
                     </td>
-                    <td className="px-2 action_column">
-                      <div className="flex gap-1">
-                        <Link to={`/UpdateTripForm/${dt.id}`}>
-                          <button className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer">
-                            <FaPen className="text-[12px]" />
+                    <td className="p-2">{totalCost}</td>
+                    <td className="p-2">{dt.trip_price}</td>
+                    {user.data.user.role === "User" ? (
+                      ""
+                    ) : (
+                      <td className="px-1 action_column">
+                        <div className="flex gap-1">
+                          <Link to={`/UpdateTripForm/${dt.id}`}>
+                            <button className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer">
+                              <FaPen className="text-[12px]" />
+                            </button>
+                          </Link>
+                          <button
+                            onClick={() => handleView(dt.id)}
+                            className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer"
+                          >
+                            <FaEye className="text-[12px]" />
                           </button>
-                        </Link>
-                        <button
-                          onClick={() => handleView(dt.id)}
-                          className="text-primary hover:bg-primary hover:text-white px-2 py-1 rounded shadow-md transition-all cursor-pointer"
-                        >
-                          <FaEye className="text-[12px]" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setselectedTripId(dt.id);
-                            setIsOpen(true);
-                          }}
-                          className="text-red-900 hover:text-white hover:bg-red-900 px-2 py-1 rounded shadow-md transition-all cursor-pointer"
-                        >
-                          <FaTrashAlt className="text-[12px]" />
-                        </button>
-                      </div>
-                    </td>
+                          <button
+                            onClick={() => {
+                              setselectedTripId(dt.id);
+                              setIsOpen(true);
+                            }}
+                            className="text-red-900 hover:text-white hover:bg-red-900 px-2 py-1 rounded shadow-md transition-all cursor-pointer"
+                          >
+                            <FaTrashAlt className="text-[12px]" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
@@ -425,19 +533,25 @@ const TripList = () => {
           >
             <GrFormPrevious />
           </button>
-          {[...Array(totalPages).keys()].map((number) => (
-            <button
-              key={number + 1}
-              onClick={() => handlePageClick(number + 1)}
-              className={`px-3 py-1 rounded-sm ${
-                currentPage === number + 1
-                  ? "bg-primary text-white hover:bg-gray-200 hover:text-primary transition-all duration-300 cursor-pointer"
-                  : "bg-gray-200 hover:bg-primary hover:text-white transition-all cursor-pointer"
-              }`}
-            >
-              {number + 1}
-            </button>
-          ))}
+          {getPageNumbers().map((number, idx) =>
+            number === "..." ? (
+              <span key={`dots-${idx}`} className="px-2 text-gray-500">
+                ...
+              </span>
+            ) : (
+              <button
+                key={`${number}-${idx}`}
+                onClick={() => handlePageClick(number)}
+                className={`w-8 h-8 rounded-sm flex items-center justify-center text-sm font-medium hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer ${
+                  currentPage === number
+                    ? "bg-primary text-white"
+                    : "bg-gray-200 text-primary hover:bg-gray-200"
+                }`}
+              >
+                {number}
+              </button>
+            )
+          )}
           <button
             onClick={handleNextPage}
             className={`p-2 ${
@@ -528,7 +642,7 @@ const TripList = () => {
                   <p className="w-48">ড্রাইভারের কমিশন</p>{" "}
                   <p>{selectedTrip.driver_percentage}</p>
                 </li>
-                <li className="w-[428px] flex text-primary font-semibold px-3 py-2">
+                <li className="w-[428px] flex text-primary text-sm font-semibold px-3 py-2 border-r border-gray-300">
                   <p className="w-48">তেলের মূল্য</p>{" "}
                   <p>{selectedTrip.trip_price}</p>
                 </li>
@@ -564,6 +678,10 @@ const TripList = () => {
                 <li className="w-[428px] flex text-primary text-sm font-semibold px-3 py-2 border-r border-gray-300">
                   <p className="w-48">ট্রিপের ভাড়া</p>{" "}
                   <p>{selectedTrip.trip_price}</p>
+                </li>
+                <li className="w-[428px] flex text-primary text-sm font-semibold px-3 py-2 border-r border-gray-300">
+                  <p className="w-48">কাস্টমারের নাম</p>{" "}
+                  <p>{selectedTrip.customer}</p>
                 </li>
               </ul>
               <div className="flex justify-end mt-10">

@@ -17,7 +17,6 @@ const AddUserForm = () => {
   const password = watch("password");
   //
   const onSubmit = async (data) => {
-    console.log("add car data", data);
     try {
       const formData = new FormData();
       for (const key in data) {
@@ -28,7 +27,6 @@ const AddUserForm = () => {
         formData
       );
       const resData = response.data;
-      console.log("resData", resData);
       if (resData.status === "success") {
         toast.success("ইউজার সফলভাবে যোগ হয়েছে!", { position: "top-right" });
         reset();

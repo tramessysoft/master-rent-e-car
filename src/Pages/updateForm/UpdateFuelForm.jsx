@@ -24,7 +24,6 @@ const UpdateFuelForm = () => {
     price,
     total_price,
   } = updateFuelLoaderData.data;
-  console.log("updateFuelLoaderData", updateFuelLoaderData.data);
 
   const fuelDateRef = useRef(null);
   const { register, handleSubmit, control, watch } = useForm({
@@ -78,7 +77,6 @@ const UpdateFuelForm = () => {
       );
 
       const resData = response.data;
-      console.log("resData", resData);
 
       if (resData.status === "success") {
         toast.success("ফুয়েল সফলভাবে আপডেট হয়েছে!", {

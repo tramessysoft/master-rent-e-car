@@ -47,7 +47,6 @@ const FuelForm = () => {
     label: driver.name,
   }));
   const onSubmit = async (data) => {
-    console.log("add fuel data", data);
     data.total_price = total;
     try {
       const formData = new FormData();
@@ -59,7 +58,6 @@ const FuelForm = () => {
         formData
       );
       const resData = response.data;
-      console.log("resData", resData);
       if (resData.status === "Success") {
         toast.success("ফুয়েল সফলভাবে সংরক্ষণ হয়েছে!", {
           position: "top-right",

@@ -14,6 +14,7 @@ const AddTripForm = () => {
     watch,
     control,
     formState: { errors },
+    setValue,
   } = useForm();
   const tripDateRef = useRef(null);
   const commision = parseFloat(watch("driver_percentage") || 0);
@@ -22,7 +23,7 @@ const AddTripForm = () => {
   const totalDamarage = parseFloat(watch("demarage") || 0);
   const other = parseFloat(watch("other_expenses") || 0);
   const total = commision + fuel + gas + totalDamarage + other;
-  console.log("total", total);
+
   // driver name
   const [drivers, setDrivers] = useState([]);
   // car name / registration number
@@ -49,10 +50,10 @@ const AddTripForm = () => {
   const driverOptions = drivers.map((driver) => ({
     value: driver.name,
     label: driver.name,
+    contact: driver.contact,
   }));
   // post data on server
   const onSubmit = async (data) => {
-    console.log("add car data", data);
     try {
       const formData = new FormData();
       for (const key in data) {
@@ -63,7 +64,6 @@ const AddTripForm = () => {
         formData
       );
       const resData = response.data;
-      console.log("resData", resData);
       if (resData.status === "success") {
         toast.success("ট্রিপ সফলভাবে সংরক্ষণ হয়েছে!", {
           position: "top-right",
@@ -140,12 +140,12 @@ const AddTripForm = () => {
             <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  লোড পয়েন্ট
+                  পিকআপ পয়েন্ট
                 </label>
                 <input
                   {...register("load_point", { required: true })}
                   type="text"
-                  placeholder="লোড পয়েন্ট..."
+                  placeholder="পিকআপ পয়েন্ট..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
                 {errors.load_point && (
@@ -154,12 +154,12 @@ const AddTripForm = () => {
               </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  আনলোড পয়েন্ট
+                  ড্রপ পয়েন্ট
                 </label>
                 <input
                   {...register("unload_point", { required: true })}
                   type="text"
-                  placeholder="আনলোড পয়েন্ট..."
+                  placeholder="ড্রপ পয়েন্ট..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
                 {errors.unload_point && (
@@ -215,9 +215,23 @@ const AddTripForm = () => {
                     <Select
                       inputRef={ref}
                       value={
-                        driverOptions.find((c) => c.value === value) || null
+                        driverOptions.find(
+                          (option) => option.value === value
+                        ) || null
                       }
-                      onChange={(val) => onChange(val ? val.value : "")}
+                      onChange={(selectedOption) => {
+                        const selectedName = selectedOption?.value || "";
+                        onChange(selectedName);
+
+                        // set mobile number
+                        const matchedDriver = drivers.find(
+                          (d) => d.name === selectedName
+                        );
+                        setValue(
+                          "driver_contact",
+                          matchedDriver?.contact || ""
+                        );
+                      }}
                       options={driverOptions}
                       placeholder="ড্রাইভারের নাম নির্বাচন করুন..."
                       className="mt-1 text-sm"
@@ -230,8 +244,6 @@ const AddTripForm = () => {
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
               </div>
-            </div>
-            <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের মোবাইল
@@ -246,6 +258,14 @@ const AddTripForm = () => {
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
               </div>
+            </div>
+          </div>
+          {/*  */}
+          <div className="border border-gray-300 p-5 rounded-md">
+            <h5 className="text-primary font-semibold text-center pb-5">
+              <span className="py-2 border-b-2 border-primary">চলমান খরচ</span>
+            </h5>
+            <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের কমিশন
@@ -260,14 +280,6 @@ const AddTripForm = () => {
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
               </div>
-            </div>
-          </div>
-          {/*  */}
-          <div className="border border-gray-300 p-5 rounded-md">
-            <h5 className="text-primary font-semibold text-center pb-5">
-              <span className="py-2 border-b-2 border-primary">চলমান খরচ</span>
-            </h5>
-            <div className="md:flex justify-between gap-3">
               <div className="w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   তেলের মূল্য
@@ -349,6 +361,20 @@ const AddTripForm = () => {
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
                 {errors.customer && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  কাস্টমারের মোবাইল
+                </label>
+                <input
+                  {...register("customer_mobile", { required: true })}
+                  type="number"
+                  placeholder="কাস্টমারের মোবাইল..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+                {errors.customer_mobile && (
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
               </div>

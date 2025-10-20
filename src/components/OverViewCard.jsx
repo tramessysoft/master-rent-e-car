@@ -8,6 +8,13 @@ const OverViewCard = () => {
   const [dieselCost, setDieselCost] = useState(0);
   const [petrolCost, setPetrolCost] = useState(0);
   const [gasCost, setGasCost] = useState(0);
+  // total maintenance cost
+  const [todayCost, setTodayCost] = useState(0);
+  // trip cost
+  const [otherExpenses, setOtherExpenses] = useState(0);
+  const [demarage, setDemarage] = useState(0);
+  const [driverCommission, setDriverCommission] = useState(0);
+  const [todayIncome, setTodayIncome] = useState(0);
 
   const today = dayjs().format("YYYY-MM-DD");
 
@@ -92,6 +99,79 @@ const OverViewCard = () => {
 
   const totalCost = octenCost + dieselCost + petrolCost + gasCost;
 
+  // calculate total maintenance cost
+  useEffect(() => {
+    const fetchMaintenanceData = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.dropshep.com/api/maintenance"
+        );
+        const data = response.data.data;
+
+        const today = new Date().toISOString().split("T")[0]; // 'YYYY-MM-DD'
+
+        const total = data
+          .filter((item) => item.date === today)
+          .reduce((sum, item) => sum + parseFloat(item.total_cost), 0);
+
+        setTodayCost(total);
+      } catch (error) {
+        console.error("Failed to fetch maintenance data", error);
+      }
+    };
+
+    fetchMaintenanceData();
+  }, []);
+
+  // trip cost
+  useEffect(() => {
+    const fetchTripData = async () => {
+      try {
+        const response = await axios.get("https://api.dropshep.com/api/trip");
+        const data = response.data.data;
+
+        const today = new Date().toISOString().split("T")[0]; // Format: "YYYY-MM-DD"
+
+        // Filter trips that happened today only
+        const todayTrips = data.filter((trip) => trip.trip_date === today);
+
+        // Sum today's other expenses
+        const totalOtherExpenses = todayTrips.reduce(
+          (sum, trip) => sum + parseFloat(trip.other_expenses || 0),
+          0
+        );
+
+        // Sum today's demarage
+        const totalDemarage = todayTrips.reduce(
+          (sum, trip) => sum + parseFloat(trip.demarage || 0),
+          0
+        );
+        // Sum today's driver commission
+        const totalCommission = todayTrips.reduce(
+          (sum, trip) => sum + parseFloat(trip.driver_percentage || 0),
+          0
+        );
+        // Sum today's trip income
+        const totalTripIncome = todayTrips.reduce(
+          (sum, trip) => sum + parseFloat(trip.trip_price || 0),
+          0
+        );
+
+        setOtherExpenses(totalOtherExpenses);
+        setDemarage(totalDemarage);
+        setDriverCommission(totalCommission);
+        setTodayIncome(totalTripIncome);
+      } catch (error) {
+        console.error("Failed to fetch trip data", error);
+      }
+    };
+
+    fetchTripData();
+  }, []);
+  const totalCommission = otherExpenses + demarage + driverCommission;
+
+  // total expense
+  const totalExpense = totalCost + todayCost + totalCommission;
   return (
     <div className="md:p-5">
       <ul className="md:flex gap-3">
@@ -102,11 +182,15 @@ const OverViewCard = () => {
           </div>
           <div className="p-3 text-primary font-semibold text-sm space-y-2">
             <div className="flex items-center gap-3">
-              <p className="flex justify-between w-full border-t mt-3 pt-3">
-                <span>টোটাল আয়</span> - <span>1595</span>
-                {/* চাইলে ডাইনামিক করতে পারো */}
+              <p className="flex justify-between w-full mt-3 pt-3">
+                <span>আজকের আয়</span> - <span>{todayIncome}</span>
               </p>
             </div>
+            {/* <div className="flex items-center gap-3">
+              <p className="flex justify-between w-full mt-3 pt-3">
+                <span>আজকের প্রফিট</span> - <span>{todayIncome}</span>
+              </p>
+            </div> */}
           </div>
         </li>
 
@@ -119,33 +203,27 @@ const OverViewCard = () => {
             <div className="flex items-center gap-3">
               <div className="bg-primary w-[6px] h-[6px] rounded-full" />
               <p className="flex justify-between w-full">
-                <span>Octen খরচ</span> -{" "}
-                <span>{octenCost.toFixed(2)} টাকা</span>
+                <span>তেলের খরচ</span> - <span>{totalCost} টাকা</span>
               </p>
             </div>
             <div className="flex items-center gap-3">
               <div className="bg-primary w-[6px] h-[6px] rounded-full" />
               <p className="flex justify-between w-full">
-                <span>Diesel খরচ</span> -{" "}
-                <span>{dieselCost.toFixed(2)} টাকা</span>
+                <span>মেইনটেনেন্স খরচ</span> -{" "}
+                <span>{todayCost.toFixed(2)} টাকা</span>
               </p>
             </div>
             <div className="flex items-center gap-3">
               <div className="bg-primary w-[6px] h-[6px] rounded-full" />
               <p className="flex justify-between w-full">
-                <span>Petrol খরচ</span> -{" "}
-                <span>{petrolCost.toFixed(2)} টাকা</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="bg-primary w-[6px] h-[6px] rounded-full" />
-              <p className="flex justify-between w-full">
-                <span>Gas খরচ</span> - <span>{gasCost.toFixed(2)} টাকা</span>
+                <span>ট্রিপ খরচ</span> -{" "}
+                <span>{totalCommission.toFixed(2)} টাকা</span>
               </p>
             </div>
             <div className="flex items-center gap-3">
               <p className="flex justify-between w-full border-t mt-3 pt-3">
-                <span>মোট ব্যয়</span> - <span>{totalCost.toFixed(2)} টাকা</span>
+                <span>মোট ব্যয়</span> -{" "}
+                <span>{totalExpense.toFixed(2)} টাকা</span>
               </p>
             </div>
           </div>

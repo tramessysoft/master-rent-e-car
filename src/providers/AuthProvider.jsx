@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
       return { success: false, message: error.message };
     }
   };
-  console.log("user", user);
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");

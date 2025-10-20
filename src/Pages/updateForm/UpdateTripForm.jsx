@@ -70,8 +70,7 @@ const UpdateTripForm = () => {
   const totalDamarage = parseFloat(watch("demarage") || 0);
   const other = parseFloat(watch("other_expenses") || 0);
   const total = commision + fuel + gas + totalDamarage + other;
-  console.log("total", total);
-  console.log("updateTripLoaderData", updateTripLoaderData);
+
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
@@ -85,7 +84,6 @@ const UpdateTripForm = () => {
       );
 
       const resData = response.data;
-      console.log("resData", resData);
 
       if (resData.status === "success") {
         toast.success("ট্রিপ সফলভাবে আপডেট হয়েছে!", { position: "top-right" });

@@ -193,6 +193,23 @@ const Sidebar = () => {
                           <span>মেইনটেনেন্স</span>
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          to="/Booking"
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
+                            isActive("/Booking")
+                              ? "text-white bg-primary"
+                              : "text-gray-500 hover:text-primary"
+                          }`}
+                        >
+                          <div
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
+                              isActive("/Booking") ? "bg-white" : "bg-primary"
+                            }`}
+                          ></div>
+                          <span>বুকিং</span>
+                        </Link>
+                      </li>
                     </ul>
                   )}
                 </li>
@@ -247,6 +264,25 @@ const Sidebar = () => {
                             }`}
                           ></div>
                           <span>দৈনিক ব্যয়</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/MonthlyStatement"
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
+                            isActive("/MonthlyStatement")
+                              ? "text-white bg-primary"
+                              : "text-gray-500 hover:text-primary"
+                          }`}
+                        >
+                          <div
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
+                              isActive("/MonthlyStatement")
+                                ? "bg-white"
+                                : "bg-primary"
+                            }`}
+                          ></div>
+                          <span>মাসিক স্টেটমেন্ট</span>
                         </Link>
                       </li>
                     </ul>
@@ -409,6 +445,23 @@ const Sidebar = () => {
                             }`}
                           ></div>
                           <span>মেইনটেনেন্স</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/Booking"
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
+                            isActive("/Booking")
+                              ? "text-white bg-primary"
+                              : "text-gray-500 hover:text-primary"
+                          }`}
+                        >
+                          <div
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
+                              isActive("/Booking") ? "bg-white" : "bg-primary"
+                            }`}
+                          ></div>
+                          <span>বুকিং</span>
                         </Link>
                       </li>
                     </ul>

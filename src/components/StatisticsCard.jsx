@@ -7,11 +7,13 @@ import {
   FaUserPlus,
   FaArrowUp,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const StatisticsCard = () => {
   const [trips, setTrips] = useState([]);
   const [vehicle, setvehicle] = useState([]);
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
+  const [uniqueCustomerCount, setUniqueCustomerCount] = useState(0);
   const [driver, setDriver] = useState([]);
   // trips
   useEffect(() => {
@@ -25,12 +27,37 @@ const StatisticsCard = () => {
       setvehicle(res.data.data);
     });
   }, []);
-  // users
+  // customer count
   useEffect(() => {
-    axios.get("https://api.dropshep.com/api/users").then((res) => {
-      setUsers(res.data.data);
-    });
+    fetch("https://api.dropshep.com/api/trip")
+      .then((res) => res.json())
+      .then((response) => {
+        const trips = response.data;
+
+        if (Array.isArray(trips)) {
+          // Extract all customer names
+          const customerNames = trips
+            .map((trip) => trip.customer?.trim())
+            .filter((name) => name && name !== ""); // Remove null/empty values
+
+          // Use Set to get unique names
+          const uniqueCustomers = new Set(customerNames);
+          setUniqueCustomerCount(uniqueCustomers.size);
+        } else {
+          console.error("Invalid data format:", response);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching trips:", error);
+      });
   }, []);
+
+  // users
+  // useEffect(() => {
+  //   axios.get("https://api.dropshep.com/api/users").then((res) => {
+  //     setUsers(res.data.data);
+  //   });
+  // }, []);
   // drivers
   useEffect(() => {
     axios.get("https://api.dropshep.com/api/driver").then((res) => {
@@ -54,10 +81,12 @@ const StatisticsCard = () => {
               </span>
             </div>
           </div>
-          <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
-            <span className="pr-1 md:pr-3">আরও তথ্য</span>
-            <FaArrowUp className="inline-block" />
-          </button>
+          <Link to="/TripList">
+            <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
+              <span className="pr-1 md:pr-3">আরও তথ্য</span>
+              <FaArrowUp className="inline-block" />
+            </button>
+          </Link>
         </li>
 
         {/* Total vehicle Card */}
@@ -73,10 +102,12 @@ const StatisticsCard = () => {
               </span>
             </div>
           </div>
-          <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
-            <span className="pr-1 md:pr-3">আরও তথ্য</span>
-            <FaArrowUp className="inline-block" />
-          </button>
+          <Link to="/CarList">
+            <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
+              <span className="pr-1 md:pr-3">আরও তথ্য</span>
+              <FaArrowUp className="inline-block" />
+            </button>
+          </Link>
         </li>
 
         {/* Total Customers Card */}
@@ -89,14 +120,16 @@ const StatisticsCard = () => {
               {/* todo */}
               <h3 className="text-[#11375B] md:font-semibold">টোটাল গ্রাহক</h3>
               <span className="text-gray-500 font-semibold">
-                {users.length}
+                {uniqueCustomerCount}
               </span>
             </div>
           </div>
-          <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
-            <span className="pr-1 md:pr-3">আরও তথ্য</span>
-            <FaArrowUp className="inline-block" />
-          </button>
+          <Link to="/TripList">
+            <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
+              <span className="pr-1 md:pr-3">আরও তথ্য</span>
+              <FaArrowUp className="inline-block" />
+            </button>
+          </Link>
         </li>
 
         {/* Drivers Card */}
@@ -112,10 +145,12 @@ const StatisticsCard = () => {
               </span>
             </div>
           </div>
-          <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
-            <span className="pr-1 md:pr-3">আরও তথ্য</span>
-            <FaArrowUp className="inline-block" />
-          </button>
+          <Link to="/DriverList">
+            <button className="w-full mt-3 md:mt-7 text-white font-semibold text-sm bg-[#11375B] md:px-3 py-1 rounded-md hover:bg-[#062238] transition-all duration-700 cursor-pointer hover:scale-105">
+              <span className="pr-1 md:pr-3">আরও তথ্য</span>
+              <FaArrowUp className="inline-block" />
+            </button>
+          </Link>
         </li>
       </ul>
     </div>

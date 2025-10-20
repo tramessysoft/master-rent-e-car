@@ -37,7 +37,7 @@ const Main = () => {
   }
 
   return (
-    <div className="flex max-w-[1444px]">
+    <div className="flex max-w-[1444px] mx-auto">
       {/* Fixed Sidebar (Desktop) */}
       <div className="hidden md:flex flex-col w-64 h-screen fixed bg-gray-200 border-r border-gray-300">
         <SIdeBar />

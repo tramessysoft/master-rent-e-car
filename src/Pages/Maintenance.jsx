@@ -43,7 +43,6 @@ const Maintenance = () => {
   }, []);
   if (loading)
     return <p className="text-center mt-16">Loading maintenance...</p>;
-  console.log("maintenance", maintenance);
   // delete by id
   const handleDelete = async (id) => {
     try {
@@ -81,7 +80,7 @@ const Maintenance = () => {
     { label: "গাড়ির নাম", key: "vehicle_name" },
     { label: "মেইনটেনেন্সের ধরন", key: "service_for" },
     { label: "পার্টস এন্ড স্পায়ারস", key: "parts_and_spairs" },
-    { label: "মেইনটেনেন্সের তারিখ", key: "time" },
+    { label: "মেইনটেনেন্সের তারিখ", key: "date" },
     { label: "অগ্রাধিকার", key: "dignifies" },
     { label: "টোটাল খরচ", key: "total_cost" },
   ];
@@ -91,7 +90,7 @@ const Maintenance = () => {
     vehicle_no: dt.vehicle_no,
     service_for: dt.service_for,
     parts_and_spairs: dt.parts_and_spairs,
-    time: dt.time,
+    date: dt.date,
     dignifies: dt.dignifies,
     total_cost: dt.total_cost,
   }));
@@ -110,6 +109,16 @@ const Maintenance = () => {
   // pdf
   const exportPDF = () => {
     const doc = new jsPDF();
+    const headers = [
+      { label: "#", key: "index" },
+      { label: "Service Type", key: "service_type" },
+      { label: "Vehicle No", key: "vehicle_no" },
+      { label: "Service For", key: "service_for" },
+      { label: "Parts Spars", key: "parts_and_spairs" },
+      { label: "Maintenance Date", key: "date" },
+      { label: "Priority", key: "dignifies" },
+      { label: "Total Cost", key: "total_cost" },
+    ];
     const tableColumn = headers.map((h) => h.label);
     const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
     autoTable(doc, {
@@ -187,6 +196,37 @@ const Maintenance = () => {
   };
   const handlePageClick = (number) => {
     setCurrentPage(number);
+  };
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+    return pages;
   };
   return (
     <main className="bg-gradient-to-br from-gray-100 to-white md:p-6">
@@ -291,34 +331,37 @@ const Maintenance = () => {
           </div>
         )}
         {/* Table */}
-        <div className="mt-5 overflow-x-auto rounded-xl border border-gray-200">
+        <div className="mt-5 overflow-x-auto rounded-xl">
           <table className="min-w-full text-sm text-left">
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
-                <th className="px-2 py-3">#</th>
-                <th className="px-2 py-3">সার্ভিসের ধরন</th>
-                <th className="px-2 py-3">গাড়ির নাঃ</th>
-                <th className="px-2 py-3">মেইনটেনেন্সের ধরন</th>
-                <th className="px-2 py-3">পার্টস এন্ড স্পায়ারস</th>
-                <th className="px-2 py-3">মেইনটেনেন্সের তারিখ</th>
-                <th className="px-2 py-3">অগ্রাধিকার</th>
-                <th className="px-2 py-3">টোটাল খরচ</th>
-                <th className="px-2 py-3 action_column">অ্যাকশন</th>
+                <th className="p-2">#</th>
+                <th className="p-2">সার্ভিসের ধরন</th>
+                <th className="p-2">গাড়ির নাঃ</th>
+                <th className="p-2">মেইনটেনেন্সের ধরন</th>
+                <th className="p-2">পার্টস এন্ড স্পায়ারস</th>
+                <th className="p-2">মেইনটেনেন্সের তারিখ</th>
+                <th className="p-2">অগ্রাধিকার</th>
+                <th className="p-2">টোটাল খরচ</th>
+                <th className="p-2 action_column">অ্যাকশন</th>
               </tr>
             </thead>
             <tbody className="text-[#11375B] font-semibold bg-gray-100">
               {currentMaintenance?.map((dt, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition-all">
-                  <td className="px-2 py-4 font-bold">
+                <tr
+                  key={index}
+                  className="hover:bg-gray-50 transition-all border border-gray-200"
+                >
+                  <td className="p-2 font-bold">
                     {indexOfFirstItem + index + 1}
                   </td>
-                  <td className="px-2 py-4">{dt.service_type}</td>
-                  <td className="px-2 py-4">{dt.vehicle_no}</td>
-                  <td className="px-2 py-4">{dt.service_for}</td>
-                  <td className="px-2 py-4">{dt.parts_and_spairs}</td>
-                  <td className="px-2 py-4">{dt.date}</td>
-                  <td className="px-2 py-4">{dt.dignifies}</td>
-                  <td className="px-2 py-4">{dt.total_cost}</td>
+                  <td className="p-2">{dt.service_type}</td>
+                  <td className="p-2">{dt.vehicle_no}</td>
+                  <td className="p-2">{dt.service_for}</td>
+                  <td className="p-2">{dt.parts_and_spairs}</td>
+                  <td className="p-2">{dt.date}</td>
+                  <td className="p-2">{dt.dignifies}</td>
+                  <td className="p-2">{dt.total_cost}</td>
                   <td className="action_column">
                     <div className="flex gap-2">
                       <Link to={`/UpdateMaintenanceForm/${dt.id}`}>
@@ -354,19 +397,25 @@ const Maintenance = () => {
             >
               <GrFormPrevious />
             </button>
-            {[...Array(totalPages).keys()].map((number) => (
-              <button
-                key={number + 1}
-                onClick={() => handlePageClick(number + 1)}
-                className={`px-3 py-1 rounded-sm ${
-                  currentPage === number + 1
-                    ? "bg-primary text-white hover:bg-gray-200 hover:text-primary transition-all duration-300 cursor-pointer"
-                    : "bg-gray-200 hover:bg-primary hover:text-white transition-all cursor-pointer"
-                }`}
-              >
-                {number + 1}
-              </button>
-            ))}
+            {getPageNumbers().map((number, idx) =>
+              number === "..." ? (
+                <span key={`dots-${idx}`} className="px-2 text-gray-500">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={`${number}-${idx}`}
+                  onClick={() => handlePageClick(number)}
+                  className={`w-8 h-8 rounded-sm flex items-center justify-center text-sm font-medium hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer ${
+                    currentPage === number
+                      ? "bg-primary text-white"
+                      : "bg-gray-200 text-primary hover:bg-gray-200"
+                  }`}
+                >
+                  {number}
+                </button>
+              )
+            )}
             <button
               onClick={handleNextPage}
               className={`p-2 ${
