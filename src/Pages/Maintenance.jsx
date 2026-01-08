@@ -5,11 +5,8 @@ import { FaTruck, FaPlus, FaFilter, FaPen, FaTrashAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 // export
-import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 const Maintenance = () => {
   const [showFilter, setShowFilter] = useState(false);
@@ -29,7 +26,7 @@ const Maintenance = () => {
   // Fetch maintenance data
   useEffect(() => {
     axios
-      .get("https://api.dropshep.com/api/maintenance")
+      .get("https://rent.demo.tramessy.com/backend/api/maintenance")
       .then((response) => {
         if (response.data.status === "success") {
           setMaintenance(response.data.data);
@@ -47,7 +44,7 @@ const Maintenance = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://api.dropshep.com/api/maintenance/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/maintenance/${id}`,
         {
           method: "DELETE",
         }
@@ -73,17 +70,7 @@ const Maintenance = () => {
       });
     }
   };
-  // export
-  const headers = [
-    { label: "#", key: "index" },
-    { label: "সার্ভিসের ধরন", key: "service_type" },
-    { label: "গাড়ির নাম", key: "vehicle_name" },
-    { label: "মেইনটেনেন্সের ধরন", key: "service_for" },
-    { label: "পার্টস এন্ড স্পায়ারস", key: "parts_and_spairs" },
-    { label: "মেইনটেনেন্সের তারিখ", key: "date" },
-    { label: "অগ্রাধিকার", key: "dignifies" },
-    { label: "টোটাল খরচ", key: "total_cost" },
-  ];
+
   const csvData = maintenance?.map((dt, index) => ({
     index: index + 1,
     service_type: dt.service_type,
@@ -106,29 +93,7 @@ const Maintenance = () => {
     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(data, "maintenance.xlsx");
   };
-  // pdf
-  const exportPDF = () => {
-    const doc = new jsPDF();
-    const headers = [
-      { label: "#", key: "index" },
-      { label: "Service Type", key: "service_type" },
-      { label: "Vehicle No", key: "vehicle_no" },
-      { label: "Service For", key: "service_for" },
-      { label: "Parts Spars", key: "parts_and_spairs" },
-      { label: "Maintenance Date", key: "date" },
-      { label: "Priority", key: "dignifies" },
-      { label: "Total Cost", key: "total_cost" },
-    ];
-    const tableColumn = headers.map((h) => h.label);
-    const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      styles: { font: "helvetica", fontSize: 8 },
-    });
 
-    doc.save("maintenance.pdf");
-  };
   // print
   const printTable = () => {
     // hide specific column
@@ -255,25 +220,19 @@ const Maintenance = () => {
         {/* export */}
         <div className="md:flex justify-between mb-4">
           <div className="flex gap-1 md:gap-3 flex-wrap">
-            <CSVLink
+            {/* <CSVLink
               data={csvData}
               headers={headers}
               filename="maintenance.csv"
               className="py-2 px-5 bg-gray-200 text-primary font-semibold rounded-md hover:bg-primary hover:text-white transition-all"
             >
               CSV
-            </CSVLink>
+            </CSVLink> */}
             <button
               onClick={exportExcel}
               className="py-2 px-5 bg-gray-200 text-primary font-semibold rounded-md hover:bg-primary hover:text-white transition-all cursor-pointer"
             >
               Excel
-            </button>
-            <button
-              onClick={exportPDF}
-              className="py-2 px-5 bg-gray-200 text-primary font-semibold rounded-md hover:bg-primary hover:text-white transition-all cursor-pointer"
-            >
-              PDF
             </button>
             <button
               onClick={printTable}

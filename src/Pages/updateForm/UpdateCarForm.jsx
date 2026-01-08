@@ -38,7 +38,7 @@ const UpdateCarForm = () => {
   // select driver
   const [drivers, setDrivers] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -52,7 +52,7 @@ const UpdateCarForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://api.dropshep.com/api/vehicle/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`,
         data,
         {
           headers: {

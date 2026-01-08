@@ -15,7 +15,7 @@ const UpdatePartsForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://api.dropshep.com/api/parts/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/parts/${id}`,
         data,
         {
           headers: {

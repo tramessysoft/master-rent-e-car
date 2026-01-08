@@ -8,11 +8,8 @@ import { Link } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { banglaFontBase64 } from "../assets/font/banglaFont";
 const CarList = () => {
   const [vehicles, setVehicle] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +26,7 @@ const CarList = () => {
   const toggleModal = () => setIsOpen(!isOpen);
   useEffect(() => {
     axios
-      .get("https://api.dropshep.com/api/vehicle")
+      .get("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => {
         if (response.data.status === "success") {
           setVehicle(response.data.data);
@@ -45,7 +42,7 @@ const CarList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://api.dropshep.com/api/vehicle/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`,
         {
           method: "DELETE",
         }
@@ -143,56 +140,6 @@ const CarList = () => {
     saveAs(fileData, "vehicles_data.xlsx");
   };
 
-  const exportPDF = () => {
-    const doc = new jsPDF();
-
-    // Step 1: Register and add the font correctly
-    doc.addFileToVFS("SolaimanLipi.ttf", banglaFontBase64);
-    doc.addFont("SolaimanLipi.ttf", "SolaimanLipi", "normal");
-    doc.setFont("SolaimanLipi");
-
-    // Step 2: Prepare table with Bangla data
-    const tableColumn = [
-      "#",
-      "Name",
-      "Car",
-      "Category",
-      "Total Seat No",
-      "Area",
-      "Trip",
-      "Registration No",
-    ];
-
-    const tableRows = vehicles.map((dt, index) => [
-      index + 1,
-      dt.driver_name,
-      dt.vehicle_name,
-      dt.category,
-      dt.size,
-      dt.registration_zone,
-      0,
-      dt.registration_number,
-    ]);
-
-    // Step 3: Generate the PDF with proper encoding
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      styles: {
-        font: "SolaimanLipi", // Ensure this matches the font added earlier
-        fontStyle: "normal",
-        fontSize: 10,
-      },
-      headStyles: {
-        font: "SolaimanLipi", // Ensure this matches the font added earlier
-        fontStyle: "normal",
-        fillColor: "#11375B",
-      },
-      theme: "grid",
-    });
-
-    doc.save("vehicles_data.pdf");
-  };
   const printTable = () => {
     // hide specific column
     const actionColumns = document.querySelectorAll(".action_column");
@@ -223,7 +170,7 @@ const CarList = () => {
   const handleViewCar = async (id) => {
     try {
       const response = await axios.get(
-        `https://api.dropshep.com/api/vehicle/${id}`
+        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`
       );
       if (response.data.status === "success") {
         setselectedCar(response.data.data);
@@ -294,26 +241,20 @@ const CarList = () => {
         {/* export */}
         <div className="md:flex justify-between items-center">
           <div className="flex gap-1 md:gap-3 text-primary font-semibold rounded-md">
-            <CSVLink
+            {/* <CSVLink
               data={csvData}
               headers={headers}
               filename={"vehicles_data.csv"}
               className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
             >
               CSV
-            </CSVLink>
+            </CSVLink> */}
             <button
               onClick={exportExcel}
               headers={headers}
               className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
             >
               Excel
-            </button>
-            <button
-              onClick={exportPDF}
-              className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
-            >
-              PDF
             </button>
             <button
               onClick={printTable}

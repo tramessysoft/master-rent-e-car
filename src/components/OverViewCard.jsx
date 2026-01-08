@@ -23,7 +23,7 @@ const OverViewCard = () => {
     const fetchVehicles = async () => {
       try {
         const response = await axios.get(
-          "https://api.dropshep.com/api/vehicle"
+          "https://rent.demo.tramessy.com/backend/api/vehicle"
         );
         const vehicles = response.data?.data || [];
 
@@ -60,7 +60,9 @@ const OverViewCard = () => {
   useEffect(() => {
     const fetchFuelData = async () => {
       try {
-        const response = await axios.get("https://api.dropshep.com/api/fuel");
+        const response = await axios.get(
+          "https://rent.demo.tramessy.com/backend/api/fuel"
+        );
         const fuels = response.data?.data || [];
 
         let octen = 0;
@@ -104,7 +106,7 @@ const OverViewCard = () => {
     const fetchMaintenanceData = async () => {
       try {
         const response = await axios.get(
-          "https://api.dropshep.com/api/maintenance"
+          "https://rent.demo.tramessy.com/backend/api/maintenance"
         );
         const data = response.data.data;
 
@@ -127,7 +129,9 @@ const OverViewCard = () => {
   useEffect(() => {
     const fetchTripData = async () => {
       try {
-        const response = await axios.get("https://api.dropshep.com/api/trip");
+        const response = await axios.get(
+          "https://rent.demo.tramessy.com/backend/api/trip"
+        );
         const data = response.data.data;
 
         const today = new Date().toISOString().split("T")[0]; // Format: "YYYY-MM-DD"

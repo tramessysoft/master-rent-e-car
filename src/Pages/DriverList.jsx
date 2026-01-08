@@ -5,10 +5,7 @@ import { FaTruck, FaPlus, FaPen, FaEye, FaTrashAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 // export
-import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 const CarList = () => {
@@ -27,7 +24,7 @@ const CarList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     axios
-      .get("https://api.dropshep.com/api/driver")
+      .get("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => {
         if (response.data.status === "success") {
           setDrivers(response.data.data);
@@ -45,7 +42,7 @@ const CarList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://api.dropshep.com/api/driver/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/driver/${id}`,
         {
           method: "DELETE",
         }
@@ -75,7 +72,7 @@ const CarList = () => {
   const handleView = async (id) => {
     try {
       const response = await axios.get(
-        `https://api.dropshep.com/api/driver/${id}`
+        `https://rent.demo.tramessy.com/backend/api/driver/${id}`
       );
       if (response.data.status === "success") {
         setSelectedDriver(response.data.data);
@@ -88,17 +85,6 @@ const CarList = () => {
       toast.error("ড্রাইভারের তথ্য আনতে সমস্যা হয়েছে");
     }
   };
-  // export functionality
-  const driverHeaders = [
-    { label: "#", key: "index" },
-    { label: "নাম", key: "name" },
-    { label: "মোবাইল", key: "contact" },
-    { label: "ঠিকানা", key: "address" },
-    { label: "জরুরি যোগাযোগ", key: "emergency_contact" },
-    { label: "লাইসেন্স", key: "license" },
-    { label: "লা.মেয়াদোত্তীর্ণ", key: "expire_date" },
-    { label: "স্ট্যাটাস", key: "status" },
-  ];
 
   const driverCsvData = drivers?.map((driver, index) => ({
     index: index + 1,
@@ -152,44 +138,6 @@ const CarList = () => {
     });
     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(data, "drivers.xlsx");
-  };
-
-  // pdf
-  const exportDriversToPDF = () => {
-    const doc = new jsPDF();
-
-    // English headers corresponding to your Bangla table
-    const tableColumn = [
-      "#",
-      "Name",
-      "Mobile",
-      "Address",
-      "Emergency Contact",
-      "License",
-      "License Expiry",
-      "Status",
-    ];
-
-    // Build table rows
-    const tableRows = driverCsvData.map((driver, index) => [
-      index + 1,
-      driver.name,
-      driver.contact,
-      driver.address,
-      driver.emergency_contact,
-      driver.license,
-      driver.expire_date,
-      driver.status,
-    ]);
-
-    // Generate PDF with autoTable
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      styles: { font: "helvetica", fontSize: 8 },
-    });
-
-    doc.save("drivers.pdf");
   };
 
   // print
@@ -304,14 +252,14 @@ const CarList = () => {
         {/* export */}
         <div className="md:flex justify-between mb-4">
           <div className="flex gap-1 md:gap-3 flex-wrap">
-            <CSVLink
+            {/* <CSVLink
               data={driverCsvData}
               headers={driverHeaders}
               filename="drivers.csv"
               className="py-2 px-5 bg-gray-200 text-primary font-semibold rounded-md hover:bg-primary hover:text-white transition-all"
             >
               CSV
-            </CSVLink>
+            </CSVLink> */}
 
             <button
               onClick={exportDriversToExcel}
@@ -319,14 +267,6 @@ const CarList = () => {
             >
               Excel
             </button>
-
-            <button
-              onClick={exportDriversToPDF}
-              className="py-2 px-5 bg-gray-200 text-primary font-semibold rounded-md hover:bg-primary hover:text-white transition-all cursor-pointer"
-            >
-              PDF
-            </button>
-
             <button
               onClick={printDriversTable}
               className="py-2 px-5 bg-gray-200 text-primary font-semibold rounded-md hover:bg-primary hover:text-white transition-all cursor-pointer"

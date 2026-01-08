@@ -32,7 +32,7 @@ const UpdateMaintenanceForm = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/vehicle")
+    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -45,7 +45,7 @@ const UpdateMaintenanceForm = () => {
   // select driver
   const [drivers, setDrivers] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -81,7 +81,7 @@ const UpdateMaintenanceForm = () => {
       }
 
       const response = await axios.post(
-        `https://api.dropshep.com/api/maintenance/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/maintenance/${id}`,
         formData
       );
 
@@ -329,7 +329,7 @@ const UpdateMaintenanceForm = () => {
                     src={
                       previewImage?.startsWith("blob:")
                         ? previewImage
-                        : `https://api.dropshep.com/public/uploads/maintenance/${previewImage}`
+                        : `https://rent.demo.tramessy.com/backend/public/uploads/maintenance/${previewImage}`
                     }
                     alt="Receipt Preview"
                     className="max-w-xs h-auto rounded border border-gray-300"

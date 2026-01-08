@@ -29,7 +29,7 @@ const Header = ({ setMobileSidebarOpen }) => {
           </h3>
 
           <Link to="/" className="font-semibold text-primary">
-            Home
+            হোম
           </Link>
         </div>
 

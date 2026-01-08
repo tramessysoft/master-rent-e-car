@@ -17,19 +17,21 @@ const StatisticsCard = () => {
   const [driver, setDriver] = useState([]);
   // trips
   useEffect(() => {
-    axios.get("https://api.dropshep.com/api/trip").then((res) => {
+    axios.get("https://rent.demo.tramessy.com/backend/api/trip").then((res) => {
       setTrips(res.data.data);
     });
   }, []);
   // vehicle
   useEffect(() => {
-    axios.get("https://api.dropshep.com/api/vehicle").then((res) => {
-      setvehicle(res.data.data);
-    });
+    axios
+      .get("https://rent.demo.tramessy.com/backend/api/vehicle")
+      .then((res) => {
+        setvehicle(res.data.data);
+      });
   }, []);
   // customer count
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/trip")
+    fetch("https://rent.demo.tramessy.com/backend/api/trip")
       .then((res) => res.json())
       .then((response) => {
         const trips = response.data;
@@ -54,15 +56,17 @@ const StatisticsCard = () => {
 
   // users
   // useEffect(() => {
-  //   axios.get("https://api.dropshep.com/api/users").then((res) => {
+  //   axios.get("https://rent.demo.tramessy.com/backend/api/users").then((res) => {
   //     setUsers(res.data.data);
   //   });
   // }, []);
   // drivers
   useEffect(() => {
-    axios.get("https://api.dropshep.com/api/driver").then((res) => {
-      setDriver(res.data.data);
-    });
+    axios
+      .get("https://rent.demo.tramessy.com/backend/api/driver")
+      .then((res) => {
+        setDriver(res.data.data);
+      });
   }, []);
 
   return (

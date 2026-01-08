@@ -26,7 +26,7 @@ const AllUsers = () => {
   // fetch all users
   useEffect(() => {
     axios
-      .get("https://api.dropshep.com/api/users")
+      .get("https://rent.demo.tramessy.com/backend/api/users")
       .then((response) => {
         if (response.data.status === "success") {
           setUsers(response.data.data);
@@ -44,7 +44,7 @@ const AllUsers = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://api.dropshep.com/api/users/delete/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/users/delete/${id}`,
         {
           method: "DELETE",
         }

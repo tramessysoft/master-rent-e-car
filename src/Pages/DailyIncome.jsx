@@ -4,10 +4,7 @@ import { FaTruck, FaFilter, FaPen } from "react-icons/fa";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { Link } from "react-router-dom";
 // export
-import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 const DailyIncome = () => {
   const [trips, setTrips] = useState([]);
@@ -23,7 +20,9 @@ const DailyIncome = () => {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const res = await axios.get("https://api.dropshep.com/api/trip");
+        const res = await axios.get(
+          "https://rent.demo.tramessy.com/backend/api/trip"
+        );
         const sorted = res.data.data.sort(
           (a, b) => new Date(b.trip_date) - new Date(a.trip_date)
         );
@@ -56,17 +55,6 @@ const DailyIncome = () => {
       (!endDate || new Date(tripDate) <= new Date(endDate));
     return matchesSearch && matchesDateRange;
   });
-  // ✅ Correct headers matching your table
-  const headers = [
-    { label: "#", key: "index" },
-    { label: "তারিখ", key: "trip_date" },
-    { label: "গাড়ি", key: "vehicle_number" },
-    { label: "লোড", key: "load_point" },
-    { label: "আনলোড", key: "unload_point" },
-    { label: "ট্রিপের ভাড়া", key: "trip_price" },
-    { label: "চলমানখরচ", key: "totalCost" }, // corrected key
-    { label: "লাভ", key: "profit" }, // corrected key
-  ];
 
   // ✅ Correct CSV data mapping
   const csvData = trips.map((dt, index) => {
@@ -103,32 +91,6 @@ const DailyIncome = () => {
     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(data, "dailyincome_data.xlsx");
   };
-
-  // ✅ Export PDF function
-  const exportPDF = () => {
-    const doc = new jsPDF();
-    const headers = [
-      { label: "#", key: "index" },
-      { label: "Date", key: "trip_date" },
-      { label: "Car", key: "vehicle_number" },
-      { label: "Load", key: "load_point" },
-      { label: "Unload", key: "unload_point" },
-      { label: "Trip Price", key: "trip_price" },
-      { label: "Total Cost", key: "totalCost" }, // corrected key
-      { label: "Profit", key: "profit" }, // corrected key
-    ];
-    const tableColumn = headers.map((h) => h.label);
-    const tableRows = csvData.map((row) => headers.map((h) => row[h.key]));
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      styles: { font: "helvetica", fontSize: 8 },
-    });
-
-    doc.save("dailyincome_data.pdf");
-  };
-
   // ✅ Print function
   const printTable = () => {
     // hide specific column
@@ -257,25 +219,11 @@ const DailyIncome = () => {
         {/* Export & Search */}
         <div className="md:flex justify-between items-center">
           <div className="flex gap-1 md:gap-3 text-primary font-semibold rounded-md">
-            <CSVLink
-              data={csvData}
-              headers={headers}
-              filename={"dailyincome_data.csv"}
-              className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
-            >
-              CSV
-            </CSVLink>
             <button
               onClick={exportExcel}
               className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
             >
               Excel
-            </button>
-            <button
-              onClick={exportPDF}
-              className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
-            >
-              PDF
             </button>
             <button
               onClick={printTable}

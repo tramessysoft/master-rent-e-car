@@ -41,7 +41,7 @@ const UpdateTripForm = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/vehicle")
+    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -53,7 +53,7 @@ const UpdateTripForm = () => {
   }));
   // driver name
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -74,7 +74,7 @@ const UpdateTripForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        `https://api.dropshep.com/api/trip/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/trip/${id}`,
         data,
         {
           headers: {

@@ -31,7 +31,7 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
               <img src={parklineLogo} alt="" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Nalitabari Rent E Car</h1>
+              <h1 className="text-xl font-bold">রেন্ট এ কার</h1>
               <p className="text-gray-600 text-xs">গাড়ি ভাড়া সেবা</p>
             </div>
           </div>
@@ -216,11 +216,9 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
         </div>
 
         <div className="mt-4 pt-3 border-t border-gray-200 text-center">
-          <p className="font-semibold text-gray-800">
-            Nalitabari Rent E Car এ আপনাকে ধন্যবাদ!
-          </p>
+          <p className="font-semibold text-gray-800">ডেভেলপ বাই ট্রামেসি</p>
           <p className="text-xs text-gray-600 mt-1">
-            যোগাযোগ: +880 1711-404727
+            যোগাযোগ: +880 1627-355382
           </p>
         </div>
       </div>

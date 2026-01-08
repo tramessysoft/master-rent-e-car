@@ -10,28 +10,37 @@ const MonthlyStatement = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [tripRes, maintenanceRes] = await Promise.all([
-          axios.get("https://api.dropshep.com/api/trip"),
-          axios.get("https://api.dropshep.com/api/maintenance"),
+        const [tripRes, maintenanceRes, expenseRes] = await Promise.all([
+          axios.get("https://rent.demo.tramessy.com/backend/api/trip"),
+          axios.get("https://rent.demo.tramessy.com/backend/api/maintenance"),
+          axios.get("https://rent.demo.tramessy.com/backend/api/expense/list"),
         ]);
+
         const trips = tripRes.data?.data || [];
         const maintenance = maintenanceRes.data?.data || [];
-        // Group trips by month
+        const expenses = expenseRes.data?.data || []; // <-- added
+
+        // Group by month
         const tripsByMonth = groupBy(trips, (item) =>
           item.trip_date.slice(0, 7)
         );
         const maintenanceByMonth = groupBy(maintenance, (item) =>
           item.date.slice(0, 7)
         );
+        const expenseByMonth = groupBy(expenses, (item) =>
+          item.date ? item.date.slice(0, 7) : null
+        );
 
         const months = new Set([
           ...Object.keys(tripsByMonth),
           ...Object.keys(maintenanceByMonth),
+          ...Object.keys(expenseByMonth), // <-- include expense months
         ]);
 
         const monthlyData = Array.from(months).map((monthKey) => {
           const tripList = tripsByMonth[monthKey] || [];
           const maintenanceList = maintenanceByMonth[monthKey] || [];
+          const expenseList = expenseByMonth[monthKey] || []; // <-- only this month
 
           const totalTripIncome = tripList.reduce(
             (sum, item) => sum + parseFloat(item.trip_price || 0),
@@ -51,7 +60,13 @@ const MonthlyStatement = () => {
             0
           );
 
-          const totalCost = totalTripCost + maintenanceCost;
+          // ✅ Fixed: Only this month's expense
+          const officeCost = expenseList.reduce(
+            (sum, item) => sum + parseFloat(item.pay_amount || 0),
+            0
+          );
+
+          const totalCost = totalTripCost + maintenanceCost + officeCost;
           const netProfit = totalTripIncome - totalCost;
 
           return {
@@ -59,12 +74,12 @@ const MonthlyStatement = () => {
             totalTripIncome,
             totalTripCost,
             maintenanceCost,
+            officeCost, // only this month
             totalCost,
             netProfit,
           };
         });
 
-        // Sort descending by month
         monthlyData.sort((a, b) => b.month.localeCompare(a.month));
         setStatement(monthlyData);
         setLoading(false);
@@ -98,6 +113,7 @@ const MonthlyStatement = () => {
                 <th className="p-2">মোট আয়</th>
                 <th className="p-2">ট্রিপ খরচ</th>
                 <th className="p-2">মেইনটেনেন্স খরচ</th>
+                <th className="p-2">অফিস খরচ</th>
                 <th className="p-2">মোট খরচ</th>
                 <th className="p-2">নিট লাভ</th>
               </tr>
@@ -118,6 +134,7 @@ const MonthlyStatement = () => {
                   <td className="p-2">{item.totalTripIncome.toFixed(2)}</td>
                   <td className="p-2">{item.totalTripCost.toFixed(2)}</td>
                   <td className="p-2">{item.maintenanceCost.toFixed(2)}</td>
+                  <td className="p-2">{item.officeCost.toFixed(2)}</td>
                   <td className="p-2">{item.totalCost.toFixed(2)}</td>
                   <td className="p-2">{item.netProfit.toFixed(2)}</td>
                 </tr>
@@ -142,6 +159,12 @@ const MonthlyStatement = () => {
                   {statement
                     .reduce((sum, item) => sum + item.maintenanceCost, 0)
                     .toFixed(2)}
+                </td>
+                <td className="p-2">
+                  {statement
+                    .reduce((sum, item) => sum + item.officeCost, 0)
+                    .toFixed(2)}{" "}
+                  {/* ✅ officeCost total */}
                 </td>
                 <td className="p-2">
                   {statement

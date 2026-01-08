@@ -23,7 +23,7 @@ const MaintenanceForm = () => {
   // car name / registration number
   const [parts, setParts] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/parts")
+    fetch("https://rent.demo.tramessy.com/backend/api/parts")
       .then((response) => response.json())
       .then((data) => setParts(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -36,7 +36,7 @@ const MaintenanceForm = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/vehicle")
+    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -49,7 +49,7 @@ const MaintenanceForm = () => {
   // select driver
   const [drivers, setDrivers] = useState([]);
   useEffect(() => {
-    fetch("https://api.dropshep.com/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -70,7 +70,7 @@ const MaintenanceForm = () => {
         }
       }
       const response = await axios.post(
-        "https://api.dropshep.com/api/maintenance",
+        "https://rent.demo.tramessy.com/backend/api/maintenance",
         formData
       );
       const resData = response.data;

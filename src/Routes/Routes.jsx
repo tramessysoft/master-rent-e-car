@@ -33,6 +33,7 @@ import MonthlyStatement from "../Pages/MonthlyStatement";
 import Booking from "../Pages/Booking";
 import AddBooking from "../Pages/AddBooking";
 import UpdateBooking from "../Pages/UpdateBooking";
+import OfficialExpense from "../Pages/OfficialExpense";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -70,7 +71,9 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/vehicle/${params.id}`),
+          fetch(
+            `https://rent.demo.tramessy.com/backend/api/vehicle/${params.id}`
+          ),
       },
       {
         path: "/DriverList",
@@ -96,7 +99,9 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/driver/${params.id}`),
+          fetch(
+            `https://rent.demo.tramessy.com/backend/api/driver/${params.id}`
+          ),
       },
       {
         path: "/TripList",
@@ -122,7 +127,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/trip/${params.id}`),
+          fetch(`https://rent.demo.tramessy.com/backend/api/trip/${params.id}`),
       },
       {
         path: "/Fuel",
@@ -148,7 +153,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/fuel/${params.id}`),
+          fetch(`https://rent.demo.tramessy.com/backend/api/fuel/${params.id}`),
       },
       {
         path: "/Parts",
@@ -166,7 +171,9 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/parts/${params.id}`),
+          fetch(
+            `https://rent.demo.tramessy.com/backend/api/parts/${params.id}`
+          ),
       },
       {
         path: "/Maintenance",
@@ -192,7 +199,9 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/maintenance/${params.id}`),
+          fetch(
+            `https://rent.demo.tramessy.com/backend/api/maintenance/${params.id}`
+          ),
       },
       {
         path: "/Booking",
@@ -218,7 +227,17 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/booking/${params.id}`),
+          fetch(
+            `https://rent.demo.tramessy.com/backend/api/booking/${params.id}`
+          ),
+      },
+      {
+        path: "/OfficialExpense",
+        element: (
+          <AdminRoute>
+            <OfficialExpense />
+          </AdminRoute>
+        ),
       },
       {
         path: "/DailyIncome",
@@ -268,7 +287,9 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/users/${params.id}`),
+          fetch(
+            `https://rent.demo.tramessy.com/backend/api/users/${params.id}`
+          ),
       },
       {
         path: "/Login",
@@ -286,7 +307,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/trip/${params.id}`),
+          fetch(`https://rent.demo.tramessy.com/backend/api/trip/${params.id}`),
       },
       {
         path: "/UpdateExpenseForm/:id",
@@ -296,7 +317,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://api.dropshep.com/api/trip/${params.id}`),
+          fetch(`https://rent.demo.tramessy.com/backend/api/trip/${params.id}`),
       },
     ],
   },

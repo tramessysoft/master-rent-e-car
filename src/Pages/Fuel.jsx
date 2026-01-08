@@ -3,11 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaTruck, FaPlus, FaFilter, FaPen, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 // export
-import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 //
 import toast, { Toaster } from "react-hot-toast";
 import { IoMdClose } from "react-icons/io";
@@ -31,7 +28,7 @@ const Fuel = () => {
   // Fetch fuel data
   useEffect(() => {
     axios
-      .get("https://api.dropshep.com/api/fuel")
+      .get("https://rent.demo.tramessy.com/backend/api/fuel")
       .then((response) => {
         if (response.data.status === "success") {
           setFuel(response.data.data);
@@ -46,17 +43,6 @@ const Fuel = () => {
 
   if (loading) return <p className="text-center mt-16">Loading fuel...</p>;
 
-  // export functionality
-  const headers = [
-    { label: "#", key: "index" },
-    { label: "ড্রাইভারের নাম", key: "driver_name" },
-    { label: "গাড়ির নাম", key: "vehicle_name" },
-    { label: "ফুয়েলের ধরন", key: "type" },
-    { label: "ফুয়েলিং তারিখ", key: "date_time" },
-    { label: "গ্যালন/লিটার", key: "quantity" },
-    { label: "লিটার প্রতি খরচ", key: "price" },
-    { label: "সকল খরচ", key: "total" },
-  ];
   const csvData = fuel.map((dt, index) => ({
     index: index + 1,
     driver_name: dt.driver_name,
@@ -79,38 +65,7 @@ const Fuel = () => {
     const data = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(data, "fuel_data.xlsx");
   };
-  const exportPDF = () => {
-    const doc = new jsPDF();
 
-    const tableColumn = [
-      "#",
-      "Driver Name",
-      "Car Name",
-      "Fuel Type",
-      "Fueling Date",
-      "Gallon/Liter",
-      "Liter per cost",
-      "Total cost",
-    ];
-
-    const tableRows = fuel.map((dt, index) => [
-      index + 1,
-      dt.driver_name,
-      dt.driver_name,
-      dt.type,
-      dt.date_time,
-      dt.quantity,
-      dt.price,
-      dt.quantity * dt.price,
-    ]);
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-    });
-
-    doc.save("fuel_data.pdf");
-  };
   const printTable = () => {
     // hide specific column
     const actionColumns = document.querySelectorAll(".action_column");
@@ -139,9 +94,12 @@ const Fuel = () => {
   // delete by id
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://api.dropshep.com/api/fuel/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://rent.demo.tramessy.com/backend/api/fuel/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete trip");
@@ -228,26 +186,21 @@ const Fuel = () => {
         {/* export */}
         <div className="md:flex justify-between items-center">
           <div className="flex gap-1 md:gap-3 text-primary font-semibold rounded-md">
-            <CSVLink
+            {/* <CSVLink
               data={csvData}
               headers={headers}
               filename={"fuel_data.csv"}
               className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
             >
               CSV
-            </CSVLink>
+            </CSVLink> */}
             <button
               onClick={exportExcel}
               className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
             >
               Excel
             </button>
-            <button
-              onClick={exportPDF}
-              className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"
-            >
-              PDF
-            </button>
+
             <button
               onClick={printTable}
               className="py-2 px-5 hover:bg-primary bg-gray-200 hover:text-white rounded-md transition-all duration-300 cursor-pointer"

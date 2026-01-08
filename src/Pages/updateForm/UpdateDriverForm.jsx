@@ -53,7 +53,7 @@ const UpdateDriverForm = () => {
       }
 
       const response = await axios.post(
-        `https://api.dropshep.com/api/driver/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/driver/${id}`,
         formData
       );
 
@@ -265,7 +265,7 @@ const UpdateDriverForm = () => {
                 src={
                   previewImage?.startsWith("blob:")
                     ? previewImage
-                    : `https://api.dropshep.com/public/uploads/driver/${previewImage}`
+                    : `https://rent.demo.tramessy.com/backend/public/uploads/driver/${previewImage}`
                 }
                 alt="License Preview"
                 className="max-w-xs h-auto rounded border border-gray-300"
