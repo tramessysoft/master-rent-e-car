@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
+import { Navigate } from "react-router-dom";
 const AddBooking = () => {
   const {
     register,
@@ -66,6 +67,7 @@ const AddBooking = () => {
           position: "top-right",
         });
         reset();
+        Navigate("/booking");
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -88,7 +90,7 @@ const AddBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
-                বুকিং তারিখ
+                বুকিং তারিখ <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -113,37 +115,88 @@ const AddBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                কাস্টমারের নাম
+                ক্যাটাগরি <span className="text-red-500">*</span>
               </label>
-              <input
-                {...register("customer_name", { required: true })}
-                type="text"
-                placeholder="কাস্টমারের নাম..."
-                className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-              />
-              {errors.customer_name && (
+              <select
+                {...register("category", { required: true })}
+                className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+              >
+                <option value="">ক্যাটাগরি...</option>
+                <option value="কার">কার</option>
+                <option value="ট্যাক্সি">ট্যাক্সি</option>
+                <option value="বাস">বাস</option>
+                <option value="ড্রাইভার">ড্রাইভার</option>
+                <option value="ডেলিভার">ডেলিভার</option>
+              </select>
+              {errors.category && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
               )}
+              <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                মোবাইল
+                গাড়ির ধরন <span className="text-red-500">*</span>
               </label>
-              <input
-                {...register("phone", { required: true })}
-                type="text"
-                placeholder="মোবাইল..."
-                className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-              />
-              {errors.phone && (
+              <select
+                {...register("vehicle_type", { required: true })}
+                className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+              >
+                <option value="">গাড়ির ধরন...</option>
+                <option value="সেডান">সেডান</option>
+                <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
+                <option value="এক্স নোহা">এক্স নোহা</option>
+                <option value="হাইয়েস">হাইয়েস</option>
+              </select>
+              {errors.vehicle_type && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
               )}
+              <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
+            </div>
+            <div className="w-full relative">
+              <label className="text-primary text-sm font-semibold">
+                ট্রিপের ধরন <span className="text-red-500">*</span>
+              </label>
+              <select
+                {...register("trip_type", { required: true })}
+                className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+              >
+                <option value="">ট্রিপের ধরন...</option>
+                <option value="ঘণ্টায়">ঘণ্টায় </option>
+                <option value="দৈনিক">দৈনিক</option>
+                <option value="মাসিক">মাসিক</option>
+                <option value="ওয়ান ওয়ে">ওয়ান ওয়ে</option>
+                <option value="সিটি ট্রিপ">সিটি ট্রিপ</option>
+              </select>
+              {errors.trip_type && (
+                <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+              )}
+              <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
             </div>
           </div>
+
           <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                গাড়ির নাম
+                পেমেন্ট এর ধরন <span className="text-red-500">*</span>
+              </label>
+              <select
+                {...register("payment_method", { required: true })}
+                className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+              >
+                <option value="">পেমেন্ট এর ধরন...</option>
+                <option value="বিকাশ">বিকাশ </option>
+                <option value="নগদ">নগদ</option>
+                <option value="ব্যাংক">ব্যাংক</option>
+                <option value="ক্যাশ">ক্যাশ</option>
+              </select>
+              {errors.payment_method && (
+                <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+              )}
+              <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
+            </div>
+            <div className="w-full relative">
+              <label className="text-primary text-sm font-semibold">
+                গাড়ির নাম <span className="text-red-500">*</span>
               </label>
               <Controller
                 name="car_name"
@@ -171,7 +224,7 @@ const AddBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                গাড়ির নাম্বার
+                গাড়ির নাম্বার <span className="text-red-500">*</span>
               </label>
               <Controller
                 name="car_number"
@@ -203,7 +256,7 @@ const AddBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                পিকআপ পয়েন্ট
+                পিকআপ পয়েন্ট <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("pickup_point", { required: true })}
@@ -217,7 +270,7 @@ const AddBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                পিকআপ এর সময়
+                পিকআপ এর সময় <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("pickup_time", { required: true })}
@@ -231,7 +284,7 @@ const AddBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                ড্রপ পয়েন্ট
+                ড্রপ পয়েন্ট <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("drop_point", { required: true })}
@@ -247,7 +300,7 @@ const AddBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
-                শুরুর তারিখ
+                শুরুর তারিখ <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -272,7 +325,7 @@ const AddBooking = () => {
             </div>
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
-                শেষ তারিখ
+                শেষ তারিখ <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -299,7 +352,7 @@ const AddBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                অ্যাডভান্স পরিশোধ (৳)
+                অ্যাডভান্স পরিশোধ (৳) <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("advanced", { required: true })}
@@ -313,7 +366,7 @@ const AddBooking = () => {
             </div>
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
-                টোটাল ভাড়া (৳)
+                টোটাল ভাড়া (৳) <span className="text-red-500">*</span>
               </label>
               <input
                 {...register("total_amount", { required: true })}
@@ -325,9 +378,39 @@ const AddBooking = () => {
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
               )}
             </div>
+          </div>
+          <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                স্ট্যাটাস
+                কাস্টমারের নাম <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...register("customer_name", { required: true })}
+                type="text"
+                placeholder="কাস্টমারের নাম..."
+                className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+              />
+              {errors.customer_name && (
+                <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+              )}
+            </div>
+            <div className="w-full relative">
+              <label className="text-primary text-sm font-semibold">
+                মোবাইল <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...register("phone", { required: true })}
+                type="text"
+                placeholder="মোবাইল..."
+                className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+              />
+              {errors.phone && (
+                <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+              )}
+            </div>
+            <div className="w-full relative">
+              <label className="text-primary text-sm font-semibold">
+                স্ট্যাটাস <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("status", { required: true })}
@@ -343,7 +426,6 @@ const AddBooking = () => {
               <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
             </div>
           </div>
-
           <div className="mt-6">
             <BtnSubmit>সাবমিট করুন</BtnSubmit>
           </div>

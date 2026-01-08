@@ -98,7 +98,7 @@ const AddTripForm = () => {
             <div className="mt-5 md:mt-1 md:flex justify-between gap-3">
               <div className="w-full">
                 <label className="text-primary text-sm font-semibold">
-                  তারিখ *
+                  তারিখ <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -123,7 +123,7 @@ const AddTripForm = () => {
               </div>
               <div className="mt-2 md:mt-0 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  ট্রিপের সময়
+                  ট্রিপের সময় <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("trip_time", { required: true })}
@@ -140,7 +140,7 @@ const AddTripForm = () => {
             <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  পিকআপ পয়েন্ট
+                  পিকআপ পয়েন্ট <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("load_point", { required: true })}
@@ -154,7 +154,7 @@ const AddTripForm = () => {
               </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  ড্রপ পয়েন্ট
+                  ড্রপ পয়েন্ট <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("unload_point", { required: true })}
@@ -178,7 +178,7 @@ const AddTripForm = () => {
             <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  গাড়ির নম্বর
+                  গাড়ির নম্বর <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   name="vehicle_number"
@@ -205,7 +205,7 @@ const AddTripForm = () => {
               </div>
               <div className="mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  ড্রাইভারের নাম
+                  ড্রাইভারের নাম <span className="text-red-500">*</span>
                 </label>
                 <Controller
                   name="driver_name"
@@ -246,7 +246,7 @@ const AddTripForm = () => {
               </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  ড্রাইভারের মোবাইল
+                  ড্রাইভারের মোবাইল <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("driver_contact", { required: true })}
@@ -268,7 +268,7 @@ const AddTripForm = () => {
             <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  ড্রাইভারের কমিশন
+                  ড্রাইভারের কমিশন <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("driver_percentage", { required: true })}
@@ -320,7 +320,7 @@ const AddTripForm = () => {
                   ওয়েটিং চার্জ
                 </label>
                 <input
-                  {...register("demarage", { required: true })}
+                  {...register("demarage")}
                   type="number"
                   placeholder="ওয়েটিং চার্জ..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
@@ -352,7 +352,7 @@ const AddTripForm = () => {
             <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  কাস্টমারের নাম
+                  কাস্টমারের নাম <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("customer", { required: true })}
@@ -366,7 +366,7 @@ const AddTripForm = () => {
               </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  কাস্টমারের মোবাইল
+                  কাস্টমারের মোবাইল <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("customer_mobile", { required: true })}
@@ -380,7 +380,7 @@ const AddTripForm = () => {
               </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
-                  ট্রিপের ভাড়া
+                  ট্রিপের ভাড়া <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("trip_price", { required: true })}
