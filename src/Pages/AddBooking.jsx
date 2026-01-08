@@ -8,8 +8,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 const AddBooking = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -67,7 +70,7 @@ const AddBooking = () => {
           position: "top-right",
         });
         reset();
-        Navigate("/booking");
+        navigate("/booking");
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -405,6 +408,20 @@ const AddBooking = () => {
                 className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
               />
               {errors.phone && (
+                <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+              )}
+            </div>
+            <div className="w-full relative">
+              <label className="text-primary text-sm font-semibold">
+                ইমেইল <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...register("email", { required: true })}
+                type="text"
+                placeholder="ইমেইল..."
+                className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+              />
+              {errors.email && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
               )}
             </div>
