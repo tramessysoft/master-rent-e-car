@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { forwardRef } from "react";
-import parklineLogo from "../assets/logo.png";
+import parklineLogo from "../assets/po.jpeg";
 const BookingInvoice = forwardRef(({ data }, ref) => {
   const {
     customer_name,
