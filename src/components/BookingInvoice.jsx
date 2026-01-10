@@ -5,6 +5,7 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
   const {
     customer_name,
     phone,
+    email,
     car_name,
     start_date,
     end_date,
@@ -83,6 +84,7 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
             <div className="space-y-1 text-sm">
               <p className="font-medium">{customer_name}</p>
               <p className="text-gray-600">{phone}</p>
+              <p className="text-gray-600">{email}</p>
             </div>
           </div>
 

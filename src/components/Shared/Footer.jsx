@@ -1,8 +1,9 @@
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="md:flex justify-between p-5 border-b border-gray-300">
       <p className="text-gray-500 text-center">
-        Copyright © 2025{" "}
+        Copyright © {currentYear}{" "}
         <span className="text-primary font-semibold">Tramessy</span>.{" "}
         <span className="block md:inline">All rights reserved.</span>
       </p>

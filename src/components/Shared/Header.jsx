@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { FaBars, FaMagnifyingGlass } from "react-icons/fa6";
 import avatar from "../../assets/avatar.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,12 +8,33 @@ const Header = ({ setMobileSidebarOpen }) => {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-
+   const dropdownRef = useRef(null);
   // handle signout
   const handleSignout = () => {
     logout();
     navigate("/");
   };
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsAdminOpen(false);
+      }
+    };
+
+    if (isAdminOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isAdminOpen]);
+
 
   return (
     <>
@@ -46,7 +67,7 @@ const Header = ({ setMobileSidebarOpen }) => {
         </div> */}
 
         {/* Admin Dropdown */}
-        <div className="relative bg-white p-2 rounded-md flex gap-2 items-center">
+        <div className="relative bg-white p-2 rounded-md flex gap-2 items-center" ref={dropdownRef}>
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => setIsAdminOpen(!isAdminOpen)}
@@ -57,7 +78,7 @@ const Header = ({ setMobileSidebarOpen }) => {
               className="w-8 rounded-2xl drop-shadow"
             />
             <h3 className="font-semibold text-primary">
-              {user?.data?.user?.role}
+              {user?.data?.user?.name}
             </h3>
           </div>
           {isAdminOpen && (

@@ -7,7 +7,7 @@ import {
   FaBriefcase,
   FaUser,
 } from "react-icons/fa6";
-import logo from "../assets/tramessy.png";
+import logo from "../assets/po.jpeg";
 import avatar from "../assets/avatar.png";
 import { Link, useLocation } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
@@ -35,22 +35,13 @@ const Sidebar = () => {
     <div className="overflow-y-scroll hide-scrollbar">
       <main>
         {/* Logo */}
-        <div className="flex justify-center py-4 border-b border-gray-300">
-          <Link to="/">
-            <img src={logo} alt="Logo" className="w-28" />
-          </Link>
-        </div>
-
-        {/* Admin Info */}
-        <div className="p-3 border-b border-gray-300">
-          <div className="bg-white p-2 rounded-md flex gap-2 items-center">
-            <img
-              src={avatar}
-              alt="Admin Avatar"
-              className="w-8 rounded-2xl drop-shadow"
-            />
-            <h3 className="text-primary font-semibold">এডমিন</h3>
-          </div>
+        <div className="flex ml-3 items-center gap-3 py-3 border-b border-gray-300">     
+            <Link to="/">
+              <img src={logo} alt="Logo" className="w-6" />
+            </Link>
+            <div className="text-xs text-primary">
+              <div className="font-semibold text-xl py-2">পৌঁছাও</div>
+            </div>
         </div>
 
         {/* Navigation */}
@@ -58,11 +49,10 @@ const Sidebar = () => {
           <ul className="space-y-4">
             {/* Dashboard */}
             <li
-              className={`py-3 px-2 rounded-sm cursor-pointer ${
-                isActive("/")
+              className={`py-3 px-2 rounded-sm cursor-pointer ${isActive("/")
                   ? "bg-primary text-white"
                   : "text-white bg-primary"
-              }`}
+                }`}
             >
               <Link to="/" className="flex items-center gap-2 font-semibold">
                 <FaBars />
@@ -90,16 +80,14 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/CarList"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/CarList")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/CarList")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/CarList") ? "bg-white" : "bg-primary"
-                            }`}
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/CarList") ? "bg-white" : "bg-primary"
+                              }`}
                           ></div>
                           <span>গাড়ি সেটআপ</span>
                         </Link>
@@ -107,18 +95,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/DriverList"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/DriverList")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/DriverList")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/DriverList")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/DriverList")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>ড্রাইভার সেটআপ</span>
                         </Link>
@@ -130,16 +116,14 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/TripList"
-                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                        isActive("/TripList")
+                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/TripList")
                           ? "text-white bg-primary"
                           : "text-gray-500 hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                          isActive("/TripList") ? "bg-white" : "bg-primary"
-                        }`}
+                        className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/TripList") ? "bg-white" : "bg-primary"
+                          }`}
                       ></div>
                       <span>ট্রিপ হিসাব</span>
                     </Link>
@@ -147,16 +131,14 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/Fuel"
-                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                        isActive("/Fuel")
+                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Fuel")
                           ? "text-white bg-primary"
                           : "text-gray-500 hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                          isActive("/Fuel") ? "bg-white" : "bg-primary"
-                        }`}
+                        className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Fuel") ? "bg-white" : "bg-primary"
+                          }`}
                       ></div>
                       <span>ফুয়েল হিসাব</span>
                     </Link>
@@ -164,16 +146,14 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/Parts"
-                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                        isActive("/Parts")
+                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Parts")
                           ? "text-white bg-primary"
                           : "text-gray-500 hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                          isActive("/Parts") ? "bg-white" : "bg-primary"
-                        }`}
+                        className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Parts") ? "bg-white" : "bg-primary"
+                          }`}
                       ></div>
                       <span>পার্টস এন্ড স্পায়ারস</span>
                     </Link>
@@ -181,16 +161,14 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/Maintenance"
-                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                        isActive("/Maintenance")
+                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Maintenance")
                           ? "text-white bg-primary"
                           : "text-gray-500 hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                          isActive("/Maintenance") ? "bg-white" : "bg-primary"
-                        }`}
+                        className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Maintenance") ? "bg-white" : "bg-primary"
+                          }`}
                       ></div>
                       <span>মেইনটেনেন্স</span>
                     </Link>
@@ -198,16 +176,14 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/Booking"
-                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                        isActive("/Booking")
+                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Booking")
                           ? "text-white bg-primary"
                           : "text-gray-500 hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                          isActive("/Booking") ? "bg-white" : "bg-primary"
-                        }`}
+                        className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Booking") ? "bg-white" : "bg-primary"
+                          }`}
                       ></div>
                       <span>বুকিং</span>
                     </Link>
@@ -215,18 +191,16 @@ const Sidebar = () => {
                   <li>
                     <Link
                       to="/OfficialExpense"
-                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                        isActive("/OfficialExpense")
+                      className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/OfficialExpense")
                           ? "text-white bg-primary"
                           : "text-gray-500 hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                          isActive("/OfficialExpense")
+                        className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/OfficialExpense")
                             ? "bg-white"
                             : "bg-primary"
-                        }`}
+                          }`}
                       ></div>
                       <span>অফিসের খরচ</span>
                     </Link>
@@ -250,18 +224,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/DailyIncome"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/DailyIncome")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/DailyIncome")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/DailyIncome")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/DailyIncome")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>দৈনিক আয়</span>
                         </Link>
@@ -269,18 +241,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/DailyExpense"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/DailyExpense")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/DailyExpense")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/DailyExpense")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/DailyExpense")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>দৈনিক ব্যয়</span>
                         </Link>
@@ -288,18 +258,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/MonthlyStatement"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/MonthlyStatement")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/MonthlyStatement")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/MonthlyStatement")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/MonthlyStatement")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>মাসিক স্টেটমেন্ট</span>
                         </Link>
@@ -363,16 +331,14 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/CarList"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/CarList")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/CarList")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/CarList") ? "bg-white" : "bg-primary"
-                            }`}
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/CarList") ? "bg-white" : "bg-primary"
+                              }`}
                           ></div>
                           <span>গাড়ি সেটআপ</span>
                         </Link>
@@ -380,18 +346,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/DriverList"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/DriverList")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/DriverList")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/DriverList")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/DriverList")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>ড্রাইভার সেটআপ</span>
                         </Link>
@@ -399,16 +363,14 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/TripList"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/TripList")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/TripList")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/TripList") ? "bg-white" : "bg-primary"
-                            }`}
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/TripList") ? "bg-white" : "bg-primary"
+                              }`}
                           ></div>
                           <span>ট্রিপ হিসাব</span>
                         </Link>
@@ -416,16 +378,14 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/Fuel"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/Fuel")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Fuel")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/Fuel") ? "bg-white" : "bg-primary"
-                            }`}
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Fuel") ? "bg-white" : "bg-primary"
+                              }`}
                           ></div>
                           <span>ফুয়েল হিসাব</span>
                         </Link>
@@ -433,16 +393,14 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/Parts"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/Parts")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Parts")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/Parts") ? "bg-white" : "bg-primary"
-                            }`}
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Parts") ? "bg-white" : "bg-primary"
+                              }`}
                           ></div>
                           <span>পার্টস এন্ড স্পায়ারস</span>
                         </Link>
@@ -450,18 +408,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/Maintenance"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/Maintenance")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Maintenance")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/Maintenance")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Maintenance")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>মেইনটেনেন্স</span>
                         </Link>
@@ -469,16 +425,14 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/Booking"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/Booking")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/Booking")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/Booking") ? "bg-white" : "bg-primary"
-                            }`}
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/Booking") ? "bg-white" : "bg-primary"
+                              }`}
                           ></div>
                           <span>বুকিং</span>
                         </Link>
@@ -486,18 +440,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/OfficialExpense"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/OfficialExpense")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/OfficialExpense")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/OfficialExpense")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/OfficialExpense")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>অফিসের খরচ</span>
                         </Link>
@@ -524,18 +476,16 @@ const Sidebar = () => {
                       <li>
                         <Link
                           to="/DailyExpense"
-                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${
-                            isActive("/DailyExpense")
+                          className={`flex gap-2 items-center px-2 py-3 rounded-sm font-medium ${isActive("/DailyExpense")
                               ? "text-white bg-primary"
                               : "text-gray-500 hover:text-primary"
-                          }`}
+                            }`}
                         >
                           <div
-                            className={`w-[6px] h-[6px] rounded-full bg-primary ${
-                              isActive("/DailyExpense")
+                            className={`w-[6px] h-[6px] rounded-full bg-primary ${isActive("/DailyExpense")
                                 ? "bg-white"
                                 : "bg-primary"
-                            }`}
+                              }`}
                           ></div>
                           <span>দৈনিক ব্যয়</span>
                         </Link>

@@ -38,7 +38,7 @@ const AllUsers = () => {
         setLoading(false);
       });
   }, []);
-  console.log("users", users);
+  // console.log("users", users);
   if (loading) return <p className="text-center mt-16">Loading users...</p>;
   // delete by id
   const handleDelete = async (id) => {
