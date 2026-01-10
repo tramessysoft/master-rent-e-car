@@ -169,6 +169,7 @@ const AddBooking = () => {
                 <option value="মাসিক">মাসিক</option>
                 <option value="ওয়ান ওয়ে">ওয়ান ওয়ে</option>
                 <option value="সিটি ট্রিপ">সিটি ট্রিপ</option>
+                <option value="সিটি ট্রিপ">রাউন্ড ট্রিপ</option>
               </select>
               {errors.trip_type && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
@@ -436,6 +437,8 @@ const AddBooking = () => {
                 <option value="">স্ট্যাটাস</option>
                 <option value="Pending">Pending</option>
                 <option value="Confirmed">Confirmed</option>
+                <option value="Posseing ">Posseing </option>
+                <option value="Completed">Completed</option>
               </select>
               {errors.status && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>

@@ -371,6 +371,9 @@ const UpdateBooking = () => {
                 <option value="">স্ট্যাটাস</option>
                 <option value="Pending">Pending</option>
                 <option value="Confirmed">Confirmed</option>
+                <option value="Posseing ">Posseing </option>
+                <option value="Completed">Completed</option>
+                <option value="Cancel">Cancel</option>
               </select>
               {errors.status && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
