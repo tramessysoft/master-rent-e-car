@@ -26,7 +26,7 @@ const CarList = () => {
   const toggleModal = () => setIsOpen(!isOpen);
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/vehicle")
+      .get("https://pochao.tramessy.com/backend/api/vehicle")
       .then((response) => {
         if (response.data.status === "success") {
           setVehicle(response.data.data);
@@ -42,7 +42,7 @@ const CarList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`,
+        `https://pochao.tramessy.com/backend/api/vehicle/${id}`,
         {
           method: "DELETE",
         }
@@ -170,7 +170,7 @@ const CarList = () => {
   const handleViewCar = async (id) => {
     try {
       const response = await axios.get(
-        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`
+        `https://pochao.tramessy.com/backend/api/vehicle/${id}`
       );
       if (response.data.status === "success") {
         setselectedCar(response.data.data);

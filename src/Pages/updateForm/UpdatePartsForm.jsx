@@ -15,7 +15,7 @@ const UpdatePartsForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://rent.demo.tramessy.com/backend/api/parts/${id}`,
+        `https://pochao.tramessy.com/backend/api/parts/${id}`,
         data,
         {
           headers: {

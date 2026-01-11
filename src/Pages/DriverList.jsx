@@ -24,7 +24,7 @@ const CarList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/driver")
+      .get("https://pochao.tramessy.com/backend/api/driver")
       .then((response) => {
         if (response.data.status === "success") {
           setDrivers(response.data.data);
@@ -42,7 +42,7 @@ const CarList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://rent.demo.tramessy.com/backend/api/driver/${id}`,
+        `https://pochao.tramessy.com/backend/api/driver/${id}`,
         {
           method: "DELETE",
         }
@@ -72,7 +72,7 @@ const CarList = () => {
   const handleView = async (id) => {
     try {
       const response = await axios.get(
-        `https://rent.demo.tramessy.com/backend/api/driver/${id}`
+        `https://pochao.tramessy.com/backend/api/driver/${id}`
       );
       if (response.data.status === "success") {
         setSelectedDriver(response.data.data);

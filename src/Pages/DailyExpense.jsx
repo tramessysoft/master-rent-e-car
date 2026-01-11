@@ -20,7 +20,7 @@ const DailyExpense = () => {
   // Fetch data
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/trip")
+      .get("https://pochao.tramessy.com/backend/api/trip")
       .then((response) => {
         if (response.data.status === "success") {
           const sortedData = response.data.data.sort((a, b) => {

@@ -36,7 +36,7 @@ const Parts = () => {
         formData.append(key, data[key]);
       }
       const response = await axios.post(
-        "https://rent.demo.tramessy.com/backend/api/parts",
+        "https://pochao.tramessy.com/backend/api/parts",
         formData
       );
       const resData = response.data;
@@ -58,7 +58,7 @@ const Parts = () => {
   // fetch all parts
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/parts")
+      .get("https://pochao.tramessy.com/backend/api/parts")
       .then((response) => {
         if (response.data.status === "success") {
           setParts(response.data.data);
@@ -77,7 +77,7 @@ const Parts = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://rent.demo.tramessy.com/backend/api/parts/${id}`,
+        `https://pochao.tramessy.com/backend/api/parts/${id}`,
         {
           method: "DELETE",
         }

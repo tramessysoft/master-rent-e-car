@@ -23,7 +23,7 @@ const OverViewCard = () => {
     const fetchVehicles = async () => {
       try {
         const response = await axios.get(
-          "https://rent.demo.tramessy.com/backend/api/vehicle"
+          "https://pochao.tramessy.com/backend/api/vehicle"
         );
         const vehicles = response.data?.data || [];
 
@@ -61,7 +61,7 @@ const OverViewCard = () => {
     const fetchFuelData = async () => {
       try {
         const response = await axios.get(
-          "https://rent.demo.tramessy.com/backend/api/fuel"
+          "https://pochao.tramessy.com/backend/api/fuel"
         );
         const fuels = response.data?.data || [];
 
@@ -106,7 +106,7 @@ const OverViewCard = () => {
     const fetchMaintenanceData = async () => {
       try {
         const response = await axios.get(
-          "https://rent.demo.tramessy.com/backend/api/maintenance"
+          "https://pochao.tramessy.com/backend/api/maintenance"
         );
         const data = response.data.data;
 
@@ -130,7 +130,7 @@ const OverViewCard = () => {
     const fetchTripData = async () => {
       try {
         const response = await axios.get(
-          "https://rent.demo.tramessy.com/backend/api/trip"
+          "https://pochao.tramessy.com/backend/api/trip"
         );
         const data = response.data.data;
 

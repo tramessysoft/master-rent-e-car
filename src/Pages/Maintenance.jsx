@@ -26,7 +26,7 @@ const Maintenance = () => {
   // Fetch maintenance data
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/maintenance")
+      .get("https://pochao.tramessy.com/backend/api/maintenance")
       .then((response) => {
         if (response.data.status === "success") {
           setMaintenance(response.data.data);
@@ -44,7 +44,7 @@ const Maintenance = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://rent.demo.tramessy.com/backend/api/maintenance/${id}`,
+        `https://pochao.tramessy.com/backend/api/maintenance/${id}`,
         {
           method: "DELETE",
         }

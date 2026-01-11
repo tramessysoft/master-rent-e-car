@@ -27,7 +27,7 @@ const Booking = () => {
   // fetch data
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/booking")
+      .get("https://pochao.tramessy.com/backend/api/booking")
       .then((response) => {
         if (response.data.status === "success") {
           setBooking(response.data.data);
@@ -55,7 +55,7 @@ const Booking = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://rent.demo.tramessy.com/backend/api/booking/${id}`,
+        `https://pochao.tramessy.com/backend/api/booking/${id}`,
         {
           method: "DELETE",
         }

@@ -21,7 +21,7 @@ const DailyIncome = () => {
     const fetchTrips = async () => {
       try {
         const res = await axios.get(
-          "https://rent.demo.tramessy.com/backend/api/trip"
+          "https://pochao.tramessy.com/backend/api/trip"
         );
         const sorted = res.data.data.sort(
           (a, b) => new Date(b.trip_date) - new Date(a.trip_date)

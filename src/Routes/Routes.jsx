@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `https://rent.demo.tramessy.com/backend/api/vehicle/${params.id}`
+            `https://pochao.tramessy.com/backend/api/vehicle/${params.id}`
           ),
       },
       {
@@ -100,7 +100,7 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `https://rent.demo.tramessy.com/backend/api/driver/${params.id}`
+            `https://pochao.tramessy.com/backend/api/driver/${params.id}`
           ),
       },
       {
@@ -127,7 +127,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://rent.demo.tramessy.com/backend/api/trip/${params.id}`),
+          fetch(`https://pochao.tramessy.com/backend/api/trip/${params.id}`),
       },
       {
         path: "/Fuel",
@@ -153,7 +153,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://rent.demo.tramessy.com/backend/api/fuel/${params.id}`),
+          fetch(`https://pochao.tramessy.com/backend/api/fuel/${params.id}`),
       },
       {
         path: "/Parts",
@@ -172,7 +172,7 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `https://rent.demo.tramessy.com/backend/api/parts/${params.id}`
+            `https://pochao.tramessy.com/backend/api/parts/${params.id}`
           ),
       },
       {
@@ -200,7 +200,7 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `https://rent.demo.tramessy.com/backend/api/maintenance/${params.id}`
+            `https://pochao.tramessy.com/backend/api/maintenance/${params.id}`
           ),
       },
       {
@@ -228,7 +228,7 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `https://rent.demo.tramessy.com/backend/api/booking/${params.id}`
+            `https://pochao.tramessy.com/backend/api/booking/${params.id}`
           ),
       },
       {
@@ -288,7 +288,7 @@ export const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `https://rent.demo.tramessy.com/backend/api/users/${params.id}`
+            `https://pochao.tramessy.com/backend/api/users/${params.id}`
           ),
       },
       {
@@ -307,7 +307,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://rent.demo.tramessy.com/backend/api/trip/${params.id}`),
+          fetch(`https://pochao.tramessy.com/backend/api/trip/${params.id}`),
       },
       {
         path: "/UpdateExpenseForm/:id",
@@ -317,7 +317,7 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://rent.demo.tramessy.com/backend/api/trip/${params.id}`),
+          fetch(`https://pochao.tramessy.com/backend/api/trip/${params.id}`),
       },
     ],
   },

@@ -27,7 +27,7 @@ const AddBooking = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
+    fetch("https://pochao.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching vehicle data:", error));
@@ -39,7 +39,7 @@ const AddBooking = () => {
   }));
   const [vehicleNumber, setVehicleNumber] = useState([]);
   useEffect(() => {
-    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
+    fetch("https://pochao.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicleNumber(data.data))
       .catch((error) => console.error("Error fetching vehicle data:", error));
@@ -60,7 +60,7 @@ const AddBooking = () => {
         }
       }
       const response = await axios.post(
-        "https://rent.demo.tramessy.com/backend/api/booking",
+        "https://pochao.tramessy.com/backend/api/booking",
         formData
       );
       const resData = response.data;
@@ -417,7 +417,7 @@ const AddBooking = () => {
                 ইমেইল <span className="text-red-500">*</span>
               </label>
               <input
-                {...register("email", { required: true })}
+                {...register("email", { required: false })}
                 type="text"
                 placeholder="ইমেইল..."
                 className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"

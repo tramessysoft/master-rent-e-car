@@ -45,7 +45,7 @@ const UpdateBooking = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
+    fetch("https://pochao.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching vehicle data:", error));
@@ -57,7 +57,7 @@ const UpdateBooking = () => {
   }));
   const [vehicleNumber, setVehicleNumber] = useState([]);
   useEffect(() => {
-    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
+    fetch("https://pochao.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicleNumber(data.data))
       .catch((error) => console.error("Error fetching vehicle data:", error));
@@ -86,7 +86,7 @@ const UpdateBooking = () => {
       }
 
       const response = await axios.post(
-        `https://rent.demo.tramessy.com/backend/api/booking/${id}`,
+        `https://pochao.tramessy.com/backend/api/booking/${id}`,
         formData
       );
 

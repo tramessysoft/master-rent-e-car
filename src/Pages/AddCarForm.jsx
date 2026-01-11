@@ -21,7 +21,7 @@ const AddCarForm = () => {
   // select driver
   const [drivers, setDrivers] = useState([]);
   useEffect(() => {
-    fetch("https://rent.demo.tramessy.com/backend/api/driver")
+    fetch("https://pochao.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -40,7 +40,7 @@ const AddCarForm = () => {
         formData.append(key, data[key]);
       }
       const response = await axios.post(
-        "https://rent.demo.tramessy.com/backend/api/vehicle",
+        "https://pochao.tramessy.com/backend/api/vehicle",
         formData
       );
       const resData = response.data;

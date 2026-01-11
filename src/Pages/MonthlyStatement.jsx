@@ -11,9 +11,9 @@ const MonthlyStatement = () => {
     const fetchData = async () => {
       try {
         const [tripRes, maintenanceRes, expenseRes] = await Promise.all([
-          axios.get("https://rent.demo.tramessy.com/backend/api/trip"),
-          axios.get("https://rent.demo.tramessy.com/backend/api/maintenance"),
-          axios.get("https://rent.demo.tramessy.com/backend/api/expense/list"),
+          axios.get("https://pochao.tramessy.com/backend/api/trip"),
+          axios.get("https://pochao.tramessy.com/backend/api/maintenance"),
+          axios.get("https://pochao.tramessy.com/backend/api/expense/list"),
         ]);
 
         const trips = tripRes.data?.data || [];

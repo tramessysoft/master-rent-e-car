@@ -40,7 +40,7 @@ const TripList = () => {
   // Fetch trips data
   useEffect(() => {
     axios
-      .get("https://rent.demo.tramessy.com/backend/api/trip")
+      .get("https://pochao.tramessy.com/backend/api/trip")
       .then((response) => {
         if (response.data.status === "success") {
           const sortedData = response.data.data.sort((a, b) => {
@@ -60,7 +60,7 @@ const TripList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://rent.demo.tramessy.com/backend/api/trip/${id}`,
+        `https://pochao.tramessy.com/backend/api/trip/${id}`,
         {
           method: "DELETE",
         }
@@ -90,7 +90,7 @@ const TripList = () => {
   const handleView = async (id) => {
     try {
       const response = await axios.get(
-        `https://rent.demo.tramessy.com/backend/api/trip/${id}`
+        `https://pochao.tramessy.com/backend/api/trip/${id}`
       );
       if (response.data.status === "success") {
         setselectedTrip(response.data.data);
