@@ -118,19 +118,19 @@ const AddCarForm = () => {
               {...register("category", { required: true })}
               className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
             >
-              <option value="">গাড়ির ধরন...</option>
-              <option value="X Corolla">X Corolla</option>
-              <option value="Axio">Axio</option>
-              <option value="Allion">Allion</option>
-              <option value="Premio">Premio</option>
-              <option value="X Noha">X Noha</option>
-              <option value="Hiace">Hiace</option>
+              <option value="">গাড়ির ধরন নির্বাচন করুন</option>
+              <option value="sedan">সেডান</option>
+              <option value="standard">স্ট্যান্ডার্ড</option>
+              <option value="x-noah">এক্স-নোয়া</option>
+              <option value="hiace">হাইএস</option>
+              <option value="suv">এসইউভি</option>
             </select>
             <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
             {errors.category && (
               <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
             )}
           </div>
+
           <div className="relative mt-2 md:mt-0 w-full">
             {/* todo garir size bad dite hobe */}
             <label className="text-primary text-sm font-semibold">

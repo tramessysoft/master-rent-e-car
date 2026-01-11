@@ -125,11 +125,12 @@ const AddBooking = () => {
                 className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
               >
                 <option value="">ক্যাটাগরি...</option>
-                <option value="কার">কার</option>
-                <option value="ট্যাক্সি">ট্যাক্সি</option>
-                <option value="বাস">বাস</option>
-                <option value="ড্রাইভার">ড্রাইভার</option>
-                <option value="ডেলিভার">ডেলিভার</option>
+                
+                <option value="car">কার</option>
+                <option value="driver">ড্রাইভার</option>
+                <option value="bus">বাস</option>
+                <option value="delivery">ডেলিভারি</option>
+                <option value="taxi_ride">ট্যাক্সি রাইড</option>
               </select>
               {errors.category && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
@@ -144,11 +145,12 @@ const AddBooking = () => {
                 {...register("vehicle_type", { required: true })}
                 className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
               >
-                <option value="">গাড়ির ধরন...</option>
-                <option value="সেডান">সেডান</option>
-                <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
-                <option value="এক্স নোহা">এক্স নোহা</option>
-                <option value="হাইয়েস">হাইয়েস</option>
+                <option value="">গাড়ির ধরন নির্বাচন করুন</option>
+                <option value="sedan">সেডান</option>
+                <option value="standard">স্ট্যান্ডার্ড</option>
+                <option value="x-noah">এক্স-নোয়া</option>
+                <option value="hiace">হাইএস</option>
+                <option value="suv">এসইউভি</option>
               </select>
               {errors.vehicle_type && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>

@@ -4,7 +4,7 @@ import { FiCalendar } from "react-icons/fi";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { MdOutlineArrowDropDown } from "react-icons/md";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import BtnSubmit from "../../components/Button/BtnSubmit";
 
@@ -35,6 +35,7 @@ const UpdateCarForm = () => {
   const taxDateRef = useRef(null);
   const roadPermitRef = useRef(null);
   const fitnessDateRef = useRef(null);
+  const navigate = useNavigate()
   // select driver
   const [drivers, setDrivers] = useState([]);
   useEffect(() => {
@@ -64,6 +65,7 @@ const UpdateCarForm = () => {
       const resData = response.data;
       if (resData.status === "Vehicle updated successfully") {
         toast.success("গাড়ি সফলভাবে আপডেট হয়েছে!", { position: "top-right" });
+        navigate("/CarList")
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -129,12 +131,11 @@ const UpdateCarForm = () => {
               className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
             >
               <option value={category}>{category}</option>
-              <option value="X Corolla">X Corolla</option>
-              <option value="Axio">Axio</option>
-              <option value="Allion">Allion</option>
-              <option value="Premio">Premio</option>
-              <option value="X Noha">X Noha</option>
-              <option value="Hiace">Hiace</option>
+              <option value="sedan">সেডান</option>
+              <option value="standard">স্ট্যান্ডার্ড</option>
+              <option value="x-noah">এক্স-নোয়া</option>
+              <option value="hiace">হাইএস</option>
+              <option value="suv">এসইউভি</option>
             </select>
             <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
           </div>

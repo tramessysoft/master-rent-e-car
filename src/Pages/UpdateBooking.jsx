@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 const UpdateBooking = () => {
   // load data
   const updateBookingLoaderData = useLoaderData();
@@ -42,6 +42,7 @@ const UpdateBooking = () => {
   const bookingDateRef = useRef(null);
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
+  const nevigate = useNavigate()
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
@@ -95,6 +96,7 @@ const UpdateBooking = () => {
         toast.success("তথ্য সফলভাবে সংরক্ষণ হয়েছে!", {
           position: "top-right",
         });
+        nevigate("/Booking")
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -113,7 +115,7 @@ const UpdateBooking = () => {
         আপডেট বুকিং
       </h3>
       <div className="mx-auto p-6 bg-gray-100 rounded-md shadow">
-         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="md:flex justify-between gap-3">
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
@@ -143,7 +145,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                ক্যাটাগরি 
+                ক্যাটাগরি
               </label>
               <select
                 {...register("category", { required: false })}
@@ -151,11 +153,12 @@ const UpdateBooking = () => {
                 className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
               >
                 <option value="">ক্যাটাগরি...</option>
-                <option value="কার">কার</option>
-                <option value="ট্যাক্সি">ট্যাক্সি</option>
-                <option value="বাস">বাস</option>
-                <option value="ড্রাইভার">ড্রাইভার</option>
-                <option value="ডেলিভার">ডেলিভার</option>
+
+                <option value="car">কার</option>
+                <option value="driver">ড্রাইভার</option>
+                <option value="bus">বাস</option>
+                <option value="delivery">ডেলিভারি</option>
+                <option value="taxi_ride">ট্যাক্সি রাইড</option>
               </select>
               {errors.category && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
@@ -164,18 +167,19 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                গাড়ির ধরন 
+                গাড়ির ধরন
               </label>
               <select
                 {...register("vehicle_type", { required: false })}
                 defaultValue={vehicle_type}
                 className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
               >
-                <option value="">গাড়ির ধরন...</option>
-                <option value="সেডান">সেডান</option>
-                <option value="স্ট্যান্ডার্ড">স্ট্যান্ডার্ড</option>
-                <option value="এক্স নোহা">এক্স নোহা</option>
-                <option value="হাইয়েস">হাইয়েস</option>
+                <option value="">গাড়ির ধরন নির্বাচন করুন</option>
+                <option value="sedan">সেডান</option>
+                <option value="standard">স্ট্যান্ডার্ড</option>
+                <option value="x-noah">এক্স-নোয়া</option>
+                <option value="hiace">হাইএস</option>
+                <option value="suv">এসইউভি</option>
               </select>
               {errors.vehicle_type && (
                 <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
@@ -184,7 +188,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                ট্রিপের ধরন 
+                ট্রিপের ধরন
               </label>
               <select
                 {...register("trip_type", { required: false })}
@@ -209,7 +213,7 @@ const UpdateBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                পেমেন্ট এর ধরন 
+                পেমেন্ট এর ধরন
               </label>
               <select
                 {...register("payment_method", { required: false })}
@@ -229,7 +233,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                গাড়ির নাম 
+                গাড়ির নাম
               </label>
               <Controller
                 name="car_name"
@@ -291,7 +295,7 @@ const UpdateBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                পিকআপ পয়েন্ট 
+                পিকআপ পয়েন্ট
               </label>
               <input
                 {...register("pickup_point", { required: false })}
@@ -321,7 +325,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                ড্রপ পয়েন্ট 
+                ড্রপ পয়েন্ট
               </label>
               <input
                 {...register("drop_point", { required: false })}
@@ -338,7 +342,7 @@ const UpdateBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
-                শুরুর তারিখ 
+                শুরুর তারিখ
               </label>
               <div className="relative">
                 <input
@@ -364,7 +368,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full">
               <label className="text-primary text-sm font-semibold">
-                শেষ তারিখ 
+                শেষ তারিখ
               </label>
               <div className="relative">
                 <input
@@ -424,7 +428,7 @@ const UpdateBooking = () => {
           <div className="md:flex justify-between gap-3">
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                কাস্টমারের নাম 
+                কাস্টমারের নাম
               </label>
               <input
                 {...register("customer_name", { required: false })}
@@ -439,7 +443,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                মোবাইল 
+                মোবাইল
               </label>
               <input
                 {...register("phone", { required: false })}
@@ -454,7 +458,7 @@ const UpdateBooking = () => {
             </div>
             <div className="w-full relative">
               <label className="text-primary text-sm font-semibold">
-                ইমেইল 
+                ইমেইল
               </label>
               <input
                 {...register("email", { required: false })}

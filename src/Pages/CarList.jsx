@@ -76,9 +76,8 @@ const CarList = () => {
     { label: "নাম", key: "driver_name" },
     { label: "গাড়ি", key: "vehicle_name" },
     { label: "ধরন", key: "category" },
-    { label: "গাড়ির আসন সংখ্যা", key: "size" },
+    { label: "আসন সংখ্যা", key: "size" },
     { label: "এলাকা", key: "registration_zone" },
-    { label: "ট্রিপ", key: "0" },
     { label: "রেজিস্ট্রেশন নাম্বার", key: "registration_number" },
     // { label: "স্ট্যাটাস", key: "Active" },
   ];
@@ -99,12 +98,11 @@ const CarList = () => {
     // Define Bangla headers
     const headers = [
       "#",
-      "নাম",
+      "ড্রাইভার",
       "গাড়ি",
       "ধরন",
-      "গাড়ির আসন সংখ্যা",
+      "আসন সংখ্যা",
       "এলাকা",
-      "ট্রিপ",
       "রেজিস্ট্রেশন নাম্বার",
       "স্ট্যাটাস",
     ];
@@ -112,12 +110,11 @@ const CarList = () => {
     // Map your csvData to ensure column order matches the headers
     const data = csvData.map((item, index) => ({
       "#": index + 1,
-      নাম: item.driver_name,
-      গাড়ি: item.vehicle_name,
+      "ড্রাইভার": item.driver_name,
+      "গাড়ি নাম": item.vehicle_name,
       ধরন: item.category,
-      "গাড়ির আসন সংখ্যা": item.size,
+      "আসন সংখ্যা": item.size,
       এলাকা: item.registration_zone,
-      ট্রিপ: item.trip,
       "রেজিস্ট্রেশন নাম্বার": item.registration_number,
       স্ট্যাটাস: item.status,
     }));
@@ -285,12 +282,11 @@ const CarList = () => {
             <thead className="bg-[#11375B] text-white uppercase text-sm">
               <tr>
                 <th className="p-2">#</th>
-                <th className="p-2">নাম</th>
-                <th className="p-2">গাড়ি</th>
+                <th className="p-2">ড্রাইভার</th>
+                <th className="p-2">গাড়ি নাম</th>
                 <th className="p-2">ধরন</th>
-                <th className="p-2">গাড়ির আসন সংখ্যা</th>
+                <th className="p-2">আসন সংখ্যা</th>
                 <th className="p-2">এলাকা</th>
-                <th className="p-2">ট্রিপ</th>
                 <th className="p-2">রেজিস্ট্রেশন নাম্বার</th>
                 <th className="p-2">স্ট্যাটাস</th>
                 <th className="p-2 action_column">অ্যাকশন</th>
@@ -310,8 +306,6 @@ const CarList = () => {
                   <td className="p-2">{vehicle.category}</td>
                   <td className="p-2">{vehicle.size}</td>
                   <td className="p-2">{vehicle.registration_zone}</td>
-
-                  <td className="p-2">0</td>
                   <td className="p-2">{vehicle.registration_number}</td>
                   <td className="p-2">
                     <span className="text-white bg-green-700 px-3 py-1 rounded-md text-xs font-semibold">
