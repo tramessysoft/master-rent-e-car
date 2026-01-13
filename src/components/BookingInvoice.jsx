@@ -4,9 +4,11 @@ import parklineLogo from "../assets/po.jpeg";
 const BookingInvoice = forwardRef(({ data }, ref) => {
   const {
     customer_name,
+    inv_no,
     phone,
     email,
-    car_name,
+    vehicle_type,
+    trip_type,
     start_date,
     end_date,
     status,
@@ -32,29 +34,31 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
               <img src={parklineLogo} alt="" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">রেন্ট এ কার</h1>
-              <p className="text-gray-600 text-xs">গাড়ি ভাড়া সেবা</p>
+              <h1 className="text-xl font-bold">পোঁছাও</h1>
+              <p className="text-gray-600 text-xs">কার রেন্টাল</p>
             </div>
           </div>
           <div className="text-right text-sm">
-            <p className="text-black">Invoice Date</p>
+            <p className="text-black">ইনভয়েস তারিখ</p>
             <p className="text-gray-600 font-bold">{currentDate}</p>
           </div>
         </div>
 
         <div className="mt-3 grid grid-cols-4 gap-3 text-xs">
           <div>
-            <p className="text-black font-semibold">Office:</p>
-            <p className="text-gray-600">123 Motijheel, Dhaka-1000</p>
+            <p className="text-black font-semibold">অফিস:</p>
+            <p className="text-gray-600">
+              পৌঁছাও, মিরপুর ডিওএইচএস বাইপাস ঢাকা-১২১৬
+            </p>
           </div>
           <div>
-            <p className="text-black font-semibold">Contact:</p>
-            <p className="text-gray-600">+880-2-123456789</p>
+            <p className="text-black font-semibold">যোগাযোগ:</p>
+            <p className="text-gray-600">+01616600288</p>
           </div>
-          <div>
+          {/* <div>
             <p className="text-black font-semibold">License:</p>
             <p className="text-gray-600">TL: 123456</p>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -65,12 +69,10 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
             <h2 className="text-xl font-bold text-gray-800">
               গাড়ি ভাড়ার ইনভয়েস
             </h2>
-            <p className="text-sm text-gray-600">
-              #INV-{Date.now().toString().slice(-6)}
-            </p>
+            <p className="text-sm text-gray-600">#INV-{inv_no}</p>
           </div>
           <div className="text-right text-sm">
-            <p className="text-gray-600">Booking Date</p>
+            <p className="text-gray-600">বুকিং এর তারিখ</p>
             <p className="font-semibold">{currentDate}</p>
           </div>
         </div>
@@ -82,9 +84,18 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
               গ্রাহকের তথ্য
             </h3>
             <div className="space-y-1 text-sm">
-              <p className="font-medium">{customer_name}</p>
-              <p className="text-gray-600">{phone}</p>
-              <p className="text-gray-600">{email}</p>
+              <div className="flex">
+                <span className="w-20 text-gray-600">নাম:</span>
+                <span className="font-medium">{customer_name}</span>
+              </div>
+              <div className="flex gap-8">
+                <span className="w-12 text-gray-600">মোবাইল:</span>
+                <span className="font-medium">{phone}</span>
+              </div>
+              <div className="flex gap-8">
+                <span className="w-12 text-gray-600">ইমেইল:</span>
+                <span className="font-medium">{email}</span>
+              </div>
             </div>
           </div>
 
@@ -94,16 +105,34 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
             </h3>
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">গাড়ির নাম:</span>
-                <span className="font-medium">{car_name}</span>
+                <span className="text-gray-600">ট্রিপের ধরন:</span>
+                <span className="font-medium">{trip_type}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">গাড়ির ধরন:</span>
+                <span className="font-medium">{vehicle_type}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">শুরুর তারিখ:</span>
-                <span className="font-medium">{start_date}</span>
+                <span className="font-medium">
+                  {new Date(start_date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    timeZone: "UTC", // ✅ Forces UTC date
+                  })}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">শেষ তারিখ:</span>
-                <span className="font-medium">{end_date}</span>
+                <span className="font-medium">
+                  {new Date(end_date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    timeZone: "UTC", // ✅ Forces UTC date
+                  })}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">স্ট্যাটাস:</span>
@@ -145,10 +174,22 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
                   <td className="px-3 py-2">
                     <div>
                       <p className="font-medium text-gray-800">
-                        গাড়ি ভাড়া - {car_name}
+                        গাড়ি ভাড়া - {vehicle_type}
                       </p>
                       <p className="text-xs text-gray-600">
-                        {start_date} থেকে {end_date}
+                        {new Date(start_date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          timeZone: "UTC", // ✅ Forces UTC date
+                        })}
+                        থেকে{" "}
+                        {new Date(end_date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          timeZone: "UTC", // ✅ Forces UTC date
+                        })}
                       </p>
                     </div>
                   </td>
@@ -209,7 +250,7 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
             </p>
           </div> */}
 
-          <div className="bg-yellow-50 p-3 rounded">
+          <div className=" p-3 rounded">
             <h3 className="font-semibold text-gray-800 mb-2">শর্তাবলী</h3>
             <p>• ভ্রমণের আগে পেমেন্ট সম্পন্ন করতে হবে</p>
             <p>• বৈধ আইডি প্রয়োজন</p>
@@ -218,10 +259,10 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
         </div>
 
         <div className="mt-4 pt-3 border-t border-gray-200 text-center">
-          <p className="font-semibold text-gray-800">ডেভেলপ বাই ট্রামেসি</p>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="font-semibold text-gray-800">পোঁছাও লিমিটেড – ২০২৬</p>
+          {/* <p className="text-xs text-gray-600 mt-1">
             যোগাযোগ: +880 1627-355382
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

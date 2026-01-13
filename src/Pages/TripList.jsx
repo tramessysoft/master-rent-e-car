@@ -276,6 +276,7 @@ const TripList = () => {
     }
     return pages;
   };
+  console.log("trip", trip);
   return (
     <main className="bg-gradient-to-br from-gray-100 to-white md:p-6">
       <Toaster />
@@ -384,8 +385,9 @@ const TripList = () => {
                 <th className="p-2">ড্রাইভার ইনফো</th>
                 <th className="p-2">ট্রিপ এবং গন্তব্য</th>
                 <th className="p-2">কাস্টমারের তথ্য</th>
-                <th className="p-2">ট্রিপের খরচ</th>
                 <th className="p-2">ট্রিপের ভাড়া</th>
+                <th className="p-2">ট্রিপের খরচ</th>
+                <th className="p-2">লাভ</th>
                 {user.data.user.role === "User" ? (
                   ""
                 ) : (
@@ -426,7 +428,16 @@ const TripList = () => {
                       <p>তারিখঃ {dt.trip_date}</p>
                       <p>পিকআপ পয়েন্টঃ {dt.load_point}</p>
                       <p>ড্রপ পয়েন্টঃ {dt.unload_point}</p>
-                      <p>ট্রিপের সময়ঃ {dt.trip_time}</p>
+                      <p>
+                        ট্রিপের সময়ঃ{" "}
+                        {new Date(
+                          `1970-01-01T${dt.trip_time}`
+                        ).toLocaleTimeString("en-US", {
+                          hour: "numeric",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </p>
                     </td>
                     <td className="p-2">
                       <p>
@@ -436,8 +447,11 @@ const TripList = () => {
                         কাস্টমারের মোবাইলঃ <p>{dt.customer_mobile}</p>
                       </p>
                     </td>
-                    <td className="p-2">{totalCost}</td>
                     <td className="p-2">{dt.trip_price}</td>
+                    <td className="p-2">{totalCost}</td>
+                    <td className="p-2">
+                      {(dt.trip_price - totalCost).toFixed(2)}
+                    </td>
                     {user.data.user.role === "User" ? (
                       ""
                     ) : (
@@ -562,7 +576,15 @@ const TripList = () => {
               <ul className="flex border border-gray-300">
                 <li className="w-[428px] flex text-primary text-sm font-semibold px-3 py-2 border-r border-gray-300">
                   <p className="w-48">ট্রিপের সময়</p>{" "}
-                  <p>{selectedTrip.trip_time}</p>
+                  <p>
+                    {new Date(
+                      `1970-01-01T${selectedTrip.trip_time}`
+                    ).toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
+                  </p>
                 </li>
                 <li className="w-[428px] flex text-primary text-sm font-semibold px-3 py-2">
                   <p className="w-48">ট্রিপের তারিখ</p>{" "}

@@ -9,10 +9,10 @@ import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
 import { useNavigate } from "react-router-dom";
+import CreatableSelect from "react-select/creatable";
 
 const AddBooking = () => {
   const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -53,16 +53,25 @@ const AddBooking = () => {
   // post data on server
   const onSubmit = async (data) => {
     try {
+      // 🔹 Random 6 digit invoice number
+      const invNo = Math.floor(100000 + Math.random() * 900000);
+
       const formData = new FormData();
+
       for (const key in data) {
         if (data[key] !== undefined && data[key] !== null) {
           formData.append(key, data[key]);
         }
       }
+
+      // 🔹 inv_no add করা
+      formData.append("inv_no", invNo);
+
       const response = await axios.post(
         "https://pochao.tramessy.com/backend/api/booking",
         formData
       );
+
       const resData = response.data;
 
       if (resData.status === "Success") {
@@ -125,7 +134,7 @@ const AddBooking = () => {
                 className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
               >
                 <option value="">ক্যাটাগরি...</option>
-                
+
                 <option value="car">কার</option>
                 <option value="driver">ড্রাইভার</option>
                 <option value="bus">বাস</option>
@@ -209,17 +218,27 @@ const AddBooking = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { onChange, value, ref } }) => (
-                  <Select
+                  <CreatableSelect
                     inputRef={ref}
                     value={
-                      vehicleOptions.find((c) => c.value === value) || null
+                      vehicleOptions.find((c) => c.value === value) ||
+                      (value ? { value, label: value } : null)
                     }
-                    onChange={(val) => onChange(val ? val.value : "")}
+                    onChange={(val) => {
+                      if (val) {
+                        onChange(val.value);
+                      } else {
+                        onChange("");
+                      }
+                    }}
                     options={vehicleOptions}
                     placeholder="গাড়ির নাম..."
                     className="mt-1 text-sm"
                     classNamePrefix="react-select"
                     isClearable
+                    formatCreateLabel={(inputValue) =>
+                      `নতুন যোগ করুন: "${inputValue}"`
+                    }
                   />
                 )}
               />
@@ -237,18 +256,27 @@ const AddBooking = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { onChange, value, ref } }) => (
-                  <Select
+                  <CreatableSelect
                     inputRef={ref}
                     value={
                       vehicleNumberOptions.find((c) => c.value === value) ||
-                      null
+                      (value ? { value, label: value } : null)
                     }
-                    onChange={(val) => onChange(val ? val.value : "")}
+                    onChange={(val) => {
+                      if (val) {
+                        onChange(val.value);
+                      } else {
+                        onChange("");
+                      }
+                    }}
                     options={vehicleNumberOptions}
                     placeholder="গাড়ির নাম্বার..."
                     className="mt-1 text-sm"
                     classNamePrefix="react-select"
                     isClearable
+                    formatCreateLabel={(inputValue) =>
+                      `নতুন যোগ করুন: "${inputValue}"`
+                    }
                   />
                 )}
               />

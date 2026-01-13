@@ -4,15 +4,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Controller, useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { FiCalendar } from "react-icons/fi";
-import { useLoaderData } from "react-router-dom";
+import { useNavigate, useLoaderData } from "react-router-dom";
 import Select from "react-select";
 import BtnSubmit from "../../components/Button/BtnSubmit";
+import { MdOutlineArrowDropDown } from "react-icons/md";
 
 const UpdateTripForm = () => {
+  const navigate = useNavigate();
   //   update loader data
   const updateTripLoaderData = useLoaderData();
   const {
     id,
+    transport_type,
     trip_date,
     trip_time,
     driver_name,
@@ -29,12 +32,21 @@ const UpdateTripForm = () => {
     customer,
     advance,
   } = updateTripLoaderData.data;
-  const { register, handleSubmit, control, watch } = useForm({
+  const { register, handleSubmit, control, watch, setValue } = useForm({
     defaultValues: {
+      transport_type: transport_type || 0,
+      trip_price: trip_price || 0,
       driver_name: driver_name || "",
       vehicle_number: vehicle_number || "",
+      rate: updateTripLoaderData.data.rate || "",
+      driver_percentage: driver_percentage || 0,
+      fuel_price: fuel_price || 0,
+      gas_price: gas_price || 0,
+      demarage: demarage || 0,
+      other_expenses: other_expenses || 0,
     },
   });
+
   const tripDateRef = useRef(null);
   // select driver
   const [drivers, setDrivers] = useState([]);
@@ -70,7 +82,21 @@ const UpdateTripForm = () => {
   const totalDamarage = parseFloat(watch("demarage") || 0);
   const other = parseFloat(watch("other_expenses") || 0);
   const total = commision + fuel + gas + totalDamarage + other;
+  // commission rate options
+  const tripPrice = parseFloat(watch("trip_price") || 0);
+  const rate = parseFloat(watch("rate") || 0);
 
+  // driver commission calculation
+  const driverCommission = (tripPrice * rate) / 100;
+  useEffect(() => {
+    if (tripPrice > 0 && rate > 0) {
+      setValue("driver_percentage", driverCommission.toFixed(2));
+    } else {
+      setValue("driver_percentage", "");
+    }
+  }, [tripPrice, rate, setValue]);
+  // watch transport type
+  const selectedTransport = watch("transport_type");
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
@@ -87,6 +113,7 @@ const UpdateTripForm = () => {
 
       if (resData.status === "success") {
         toast.success("ট্রিপ সফলভাবে আপডেট হয়েছে!", { position: "top-right" });
+        navigate("/TripList");
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -144,7 +171,7 @@ const UpdateTripForm = () => {
                 <input
                   {...register("trip_time")}
                   defaultValue={trip_time}
-                  type="text"
+                  type="time"
                   placeholder="ট্রিপের সময়..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
@@ -186,6 +213,172 @@ const UpdateTripForm = () => {
               </span>
             </h5>
             <div className="md:flex justify-between gap-3">
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  ট্রান্সপোর্ট টাইপ <span className="text-red-500">*</span>
+                </label>
+                <select
+                  {...register("transport_type", { required: true })}
+                  className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+                >
+                  <option value={`${transport_type}`}>{transport_type}</option>
+                  <option value="নিজস্ব গাড়ী">নিজস্ব গাড়ী</option>
+                  <option value="ভেন্ডরের গাড়ী">ভেন্ডরের গাড়ী</option>
+                </select>
+                <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
+              </div>
+              {selectedTransport === "ভেন্ডরের গাড়ী" ? (
+                <>
+                  {/* Existing Vehicle Number Field */}
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      গাড়ির নম্বর <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      {...register("vehicle_number", { required: true })}
+                      type="text"
+                      placeholder="গাড়ির নম্বর দিন..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
+
+                  {/* New Field directly after vehicle number */}
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      ড্রাইভারের নাম <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      {...register("driver_name", { required: true })}
+                      type="text"
+                      placeholder="ড্রাইভারের নাম লিখুন..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
+
+                  <div className="mt-2 md:mt-0 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      ড্রাইভারের মোবাইল
+                    </label>
+                    <input
+                      {...register("driver_contact")}
+                      defaultValue={driver_contact}
+                      type="number"
+                      placeholder="ড্রাইভারের মোবাইল..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
+                </>
+              ) : (
+                /* Non-ভেন্ডরের গাড়ী Field (Select) */
+                <>
+                  {" "}
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      গাড়ির নম্বর <span className="text-red-500">*</span>
+                    </label>
+                    <Controller
+                      name="vehicle_number"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <Select
+                          inputRef={ref}
+                          value={
+                            vehicleOptions.find((c) => c.value === value) ||
+                            null
+                          }
+                          onChange={(val) => onChange(val ? val.value : "")}
+                          options={vehicleOptions}
+                          placeholder="গাড়ির নম্বর নির্বাচন করুন..."
+                          className="mt-1 text-sm"
+                          classNamePrefix="react-select"
+                          isClearable
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      ড্রাইভারের নাম <span className="text-red-500">*</span>
+                    </label>
+                    <Controller
+                      name="driver_name"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <Select
+                          inputRef={ref}
+                          value={
+                            driverOptions.find(
+                              (option) => option.value === value
+                            ) || null
+                          }
+                          onChange={(selectedOption) => {
+                            const selectedName = selectedOption?.value || "";
+                            onChange(selectedName);
+
+                            // set mobile number
+                            const matchedDriver = drivers.find(
+                              (d) => d.name === selectedName
+                            );
+                            setValue(
+                              "driver_contact",
+                              matchedDriver?.contact || ""
+                            );
+                          }}
+                          options={driverOptions}
+                          placeholder="ড্রাইভারের নাম নির্বাচন করুন..."
+                          className="mt-1 text-sm"
+                          classNamePrefix="react-select"
+                          isClearable
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="mt-2 md:mt-0 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      ড্রাইভারের মোবাইল
+                    </label>
+                    <input
+                      {...register("driver_contact")}
+                      defaultValue={driver_contact}
+                      type="number"
+                      placeholder="ড্রাইভারের মোবাইল..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  গাড়ির নম্বর <span className="text-red-500">*</span>
+                </label>
+                <Controller
+                  name="vehicle_number"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value, ref } }) => (
+                    <Select
+                      inputRef={ref}
+                      value={
+                        vehicleOptions.find((c) => c.value === value) || null
+                      }
+                      onChange={(val) => onChange(val ? val.value : "")}
+                      options={vehicleOptions}
+                      placeholder="গাড়ির নম্বর নির্বাচন করুন..."
+                      className="mt-1 text-sm"
+                      classNamePrefix="react-select"
+                      isClearable
+                    />
+                  )}
+                />
+                {errors.vehicle_number && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div> */}
+            </div>
+            {/* <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-0 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   গাড়ির নম্বর
@@ -232,21 +425,9 @@ const UpdateTripForm = () => {
                   )}
                 />
               </div>
-            </div>
+            </div> */}
             <div className="mt-1 md:flex justify-between gap-3">
-              <div className="mt-2 md:mt-0 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  ড্রাইভারের মোবাইল
-                </label>
-                <input
-                  {...register("driver_contact")}
-                  defaultValue={driver_contact}
-                  type="number"
-                  placeholder="ড্রাইভারের মোবাইল..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
-              <div className="mt-2 md:mt-0 w-full relative">
+              {/* <div className="mt-2 md:mt-0 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের কমিশন
                 </label>
@@ -255,6 +436,53 @@ const UpdateTripForm = () => {
                   defaultValue={driver_percentage}
                   type="number"
                   placeholder="ড্রাইভারের কমিশন..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+              </div> */}
+            </div>
+          </div>
+          {/*  */}
+
+          <div className="mt-3 border border-gray-300 p-5 rounded-md">
+            <h5 className="text-primary font-semibold text-center pb-5">
+              <span className="py-2 border-b-2 border-primary">
+                কাস্টমার এবং পেমেন্ট তথ্য
+              </span>
+            </h5>
+            <div className="md:flex justify-between gap-3">
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  কাস্টমারের নাম
+                </label>
+                <input
+                  {...register("customer")}
+                  defaultValue={customer}
+                  type="text"
+                  placeholder="কাস্টমারের নাম..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  ট্রিপের ভাড়া
+                </label>
+                <input
+                  {...register("trip_price")}
+                  defaultValue={trip_price}
+                  type="text"
+                  placeholder={trip_price}
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  অগ্রিম পেমেন্ট
+                </label>
+                <input
+                  {...register("advance")}
+                  defaultValue={advance}
+                  type="text"
+                  placeholder="অন্যান্য খরচ..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
@@ -266,6 +494,38 @@ const UpdateTripForm = () => {
               <span className="py-2 border-b-2 border-primary">চলমান খরচ</span>
             </h5>
             <div className="md:flex justify-between gap-3">
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  কমিশন রেট
+                </label>
+                <select
+                  {...register("rate")}
+                  className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+                >
+                  <option value={`${rate}`}>{rate}%</option>
+                  <option value="5">5%</option>
+                  <option value="10">10%</option>
+                  <option value="15">15%</option>
+                  <option value="20">20%</option>
+                  <option value="25">25%</option>
+                  <option value="30">30%</option>
+                  <option value="35">35%</option>
+                </select>
+                <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  ড্রাইভারের কমিশন <span className="text-red-500">*</span>
+                </label>
+                <input
+                  {...register("driver_percentage", { required: true })}
+                  defaultValue={driver_percentage}
+                  type="number"
+                  placeholder="ড্রাইভারের কমিশন..."
+                  readOnly
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+              </div>
               <div className="w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   তেলের মূল্য
@@ -326,51 +586,6 @@ const UpdateTripForm = () => {
                   value={total}
                   placeholder="ট্রিপের খরচ..."
                   className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 border border-gray-300 p-5 rounded-md">
-            <h5 className="text-primary font-semibold text-center pb-5">
-              <span className="py-2 border-b-2 border-primary">
-                কাস্টমার এবং পেমেন্ট তথ্য
-              </span>
-            </h5>
-            <div className="md:flex justify-between gap-3">
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  কাস্টমারের নাম
-                </label>
-                <input
-                  {...register("customer")}
-                  defaultValue={customer}
-                  type="text"
-                  placeholder="কাস্টমারের নাম..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  ট্রিপের ভাড়া
-                </label>
-                <input
-                  {...register("trip_price")}
-                  defaultValue={trip_price}
-                  type="text"
-                  placeholder={trip_price}
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  অগ্রিম পেমেন্ট
-                </label>
-                <input
-                  {...register("advance")}
-                  defaultValue={advance}
-                  type="text"
-                  placeholder="অন্যান্য খরচ..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
             </div>

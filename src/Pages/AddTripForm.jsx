@@ -6,7 +6,10 @@ import toast, { Toaster } from "react-hot-toast";
 import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
+import { MdOutlineArrowDropDown } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 const AddTripForm = () => {
+  const nevigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -52,6 +55,21 @@ const AddTripForm = () => {
     label: driver.name,
     contact: driver.contact,
   }));
+  // commission rate options
+  const tripPrice = parseFloat(watch("trip_price") || 0);
+  const rate = parseFloat(watch("rate") || 0);
+
+  // driver commission calculation
+  const driverCommission = (tripPrice * rate) / 100;
+  useEffect(() => {
+    if (tripPrice > 0 && rate > 0) {
+      setValue("driver_percentage", driverCommission.toFixed(2));
+    } else {
+      setValue("driver_percentage", "");
+    }
+  }, [tripPrice, rate, setValue]);
+  // watch transport type
+  const selectedTransport = watch("transport_type");
   // post data on server
   const onSubmit = async (data) => {
     try {
@@ -69,6 +87,7 @@ const AddTripForm = () => {
           position: "top-right",
         });
         reset();
+        nevigate("/TripList");
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -127,7 +146,7 @@ const AddTripForm = () => {
                 </label>
                 <input
                   {...register("trip_time", { required: true })}
-                  type="text"
+                  type="time"
                   placeholder="ট্রিপের সময়..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
@@ -178,6 +197,143 @@ const AddTripForm = () => {
             <div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
+                  ট্রান্সপোর্ট টাইপ <span className="text-red-500">*</span>
+                </label>
+                <select
+                  {...register("transport_type", { required: true })}
+                  className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+                >
+                  <option value="">ট্রান্সপোর্ট টাইপ...</option>
+                  <option value="নিজস্ব গাড়ী">নিজস্ব গাড়ী</option>
+                  <option value="ভেন্ডরের গাড়ী">ভেন্ডরের গাড়ী</option>
+                </select>
+                <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
+                {errors.vehicle_number && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div>
+              {selectedTransport === "ভেন্ডরের গাড়ী" ? (
+                <>
+                  {/* Existing Vehicle Number Field */}
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      গাড়ির নম্বর <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      {...register("vehicle_number", { required: true })}
+                      type="text"
+                      placeholder="গাড়ির নম্বর দিন..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                    {errors.vehicle_number && (
+                      <span className="text-red-600 text-sm">
+                        পূরণ করতে হবে
+                      </span>
+                    )}
+                  </div>
+
+                  {/* New Field directly after vehicle number */}
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      ড্রাইভারের নাম <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      {...register("driver_name", { required: true })}
+                      type="text"
+                      placeholder="ড্রাইভারের নাম লিখুন..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                    {errors.driver_name && (
+                      <span className="text-red-600 text-sm">
+                        পূরণ করতে হবে
+                      </span>
+                    )}
+                  </div>
+
+                  {/* অন্য নতুন field চাইলে এটিই একইভাবে add করতে হবে */}
+                </>
+              ) : (
+                /* Non-ভেন্ডরের গাড়ী Field (Select) */
+                <>
+                  {" "}
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      গাড়ির নম্বর <span className="text-red-500">*</span>
+                    </label>
+                    <Controller
+                      name="vehicle_number"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <Select
+                          inputRef={ref}
+                          value={
+                            vehicleOptions.find((c) => c.value === value) ||
+                            null
+                          }
+                          onChange={(val) => onChange(val ? val.value : "")}
+                          options={vehicleOptions}
+                          placeholder="গাড়ির নম্বর নির্বাচন করুন..."
+                          className="mt-1 text-sm"
+                          classNamePrefix="react-select"
+                          isClearable
+                        />
+                      )}
+                    />
+                    {errors.vehicle_number && (
+                      <span className="text-red-600 text-sm">
+                        পূরণ করতে হবে
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      ড্রাইভারের নাম <span className="text-red-500">*</span>
+                    </label>
+                    <Controller
+                      name="driver_name"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <Select
+                          inputRef={ref}
+                          value={
+                            driverOptions.find(
+                              (option) => option.value === value
+                            ) || null
+                          }
+                          onChange={(selectedOption) => {
+                            const selectedName = selectedOption?.value || "";
+                            onChange(selectedName);
+
+                            // set mobile number
+                            const matchedDriver = drivers.find(
+                              (d) => d.name === selectedName
+                            );
+                            setValue(
+                              "driver_contact",
+                              matchedDriver?.contact || ""
+                            );
+                          }}
+                          options={driverOptions}
+                          placeholder="ড্রাইভারের নাম নির্বাচন করুন..."
+                          className="mt-1 text-sm"
+                          classNamePrefix="react-select"
+                          isClearable
+                        />
+                      )}
+                    />
+                    {errors.driver_name && (
+                      <span className="text-red-600 text-sm">
+                        পূরণ করতে হবে
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
                   গাড়ির নম্বর <span className="text-red-500">*</span>
                 </label>
                 <Controller
@@ -202,48 +358,8 @@ const AddTripForm = () => {
                 {errors.vehicle_number && (
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
-              </div>
-              <div className="mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  ড্রাইভারের নাম <span className="text-red-500">*</span>
-                </label>
-                <Controller
-                  name="driver_name"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value, ref } }) => (
-                    <Select
-                      inputRef={ref}
-                      value={
-                        driverOptions.find(
-                          (option) => option.value === value
-                        ) || null
-                      }
-                      onChange={(selectedOption) => {
-                        const selectedName = selectedOption?.value || "";
-                        onChange(selectedName);
+              </div> */}
 
-                        // set mobile number
-                        const matchedDriver = drivers.find(
-                          (d) => d.name === selectedName
-                        );
-                        setValue(
-                          "driver_contact",
-                          matchedDriver?.contact || ""
-                        );
-                      }}
-                      options={driverOptions}
-                      placeholder="ড্রাইভারের নাম নির্বাচন করুন..."
-                      className="mt-1 text-sm"
-                      classNamePrefix="react-select"
-                      isClearable
-                    />
-                  )}
-                />
-                {errors.driver_name && (
-                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
-                )}
-              </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের মোবাইল <span className="text-red-500">*</span>
@@ -263,9 +379,91 @@ const AddTripForm = () => {
           {/*  */}
           <div className="border border-gray-300 p-5 rounded-md">
             <h5 className="text-primary font-semibold text-center pb-5">
+              <span className="py-2 border-b-2 border-primary">
+                কাস্টমার এবং পেমেন্ট তথ্য
+              </span>
+            </h5>
+            <div className="md:flex justify-between gap-3">
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  কাস্টমারের নাম <span className="text-red-500">*</span>
+                </label>
+                <input
+                  {...register("customer", { required: true })}
+                  type="text"
+                  placeholder="কাস্টমারের নাম..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+                {errors.customer && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  কাস্টমারের মোবাইল <span className="text-red-500">*</span>
+                </label>
+                <input
+                  {...register("customer_mobile", { required: true })}
+                  type="number"
+                  placeholder="কাস্টমারের মোবাইল..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+                {errors.customer_mobile && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  ট্রিপের ভাড়া <span className="text-red-500">*</span>
+                </label>
+                <input
+                  {...register("trip_price", { required: true })}
+                  type="text"
+                  placeholder="ট্রিপের ভাড়া..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+                {errors.trip_price && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  অগ্রিম পেমেন্ট
+                </label>
+                <input
+                  {...register("advance")}
+                  type="text"
+                  placeholder="অন্যান্য খরচ..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+              </div>
+            </div>
+          </div>
+          {/*  */}
+          <div className="border border-gray-300 p-5 rounded-md">
+            <h5 className="text-primary font-semibold text-center pb-5">
               <span className="py-2 border-b-2 border-primary">চলমান খরচ</span>
             </h5>
             <div className="md:flex justify-between gap-3">
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  কমিশন রেট
+                </label>
+                <select
+                  {...register("rate")}
+                  className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
+                >
+                  <option value="">কমিশন রেট...</option>
+                  <option value="5">5%</option>
+                  <option value="10">10%</option>
+                  <option value="15">15%</option>
+                  <option value="20">20%</option>
+                  <option value="25">25%</option>
+                  <option value="30">30%</option>
+                  <option value="35">35%</option>
+                </select>
+                <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
+              </div>
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের কমিশন <span className="text-red-500">*</span>
@@ -338,69 +536,6 @@ const AddTripForm = () => {
                   value={total}
                   placeholder="ট্রিপের খরচ..."
                   className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
-                />
-              </div>
-            </div>
-          </div>
-          {/*  */}
-          <div className="border border-gray-300 p-5 rounded-md">
-            <h5 className="text-primary font-semibold text-center pb-5">
-              <span className="py-2 border-b-2 border-primary">
-                কাস্টমার এবং পেমেন্ট তথ্য
-              </span>
-            </h5>
-            <div className="md:flex justify-between gap-3">
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  কাস্টমারের নাম <span className="text-red-500">*</span>
-                </label>
-                <input
-                  {...register("customer", { required: true })}
-                  type="text"
-                  placeholder="কাস্টমারের নাম..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-                {errors.customer && (
-                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
-                )}
-              </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  কাস্টমারের মোবাইল <span className="text-red-500">*</span>
-                </label>
-                <input
-                  {...register("customer_mobile", { required: true })}
-                  type="number"
-                  placeholder="কাস্টমারের মোবাইল..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-                {errors.customer_mobile && (
-                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
-                )}
-              </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  ট্রিপের ভাড়া <span className="text-red-500">*</span>
-                </label>
-                <input
-                  {...register("trip_price", { required: true })}
-                  type="text"
-                  placeholder="ট্রিপের ভাড়া..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-                {errors.trip_price && (
-                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
-                )}
-              </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  অগ্রিম পেমেন্ট
-                </label>
-                <input
-                  {...register("advance")}
-                  type="text"
-                  placeholder="অন্যান্য খরচ..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
             </div>

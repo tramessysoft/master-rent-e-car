@@ -8,6 +8,7 @@ import { FiCalendar } from "react-icons/fi";
 import Select from "react-select";
 import BtnSubmit from "../components/Button/BtnSubmit";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import CreatableSelect from "react-select/creatable";
 const UpdateBooking = () => {
   // load data
   const updateBookingLoaderData = useLoaderData();
@@ -42,7 +43,7 @@ const UpdateBooking = () => {
   const bookingDateRef = useRef(null);
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
-  const nevigate = useNavigate()
+  const nevigate = useNavigate();
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
@@ -72,6 +73,8 @@ const UpdateBooking = () => {
   // post data on server
   const onSubmit = async (data) => {
     try {
+      // 🔹 Random 6 digit invoice number
+      const invNo = Math.floor(100000 + Math.random() * 900000);
       const formData = new FormData();
 
       // Append fields
@@ -85,7 +88,8 @@ const UpdateBooking = () => {
       for (const [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
-
+      // 🔹 inv_no add করা
+      formData.append("inv_no", invNo);
       const response = await axios.post(
         `https://pochao.tramessy.com/backend/api/booking/${id}`,
         formData
@@ -96,7 +100,7 @@ const UpdateBooking = () => {
         toast.success("তথ্য সফলভাবে সংরক্ষণ হয়েছে!", {
           position: "top-right",
         });
-        nevigate("/Booking")
+        nevigate("/Booking");
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }
@@ -241,17 +245,27 @@ const UpdateBooking = () => {
                 rules={{ required: false }}
                 defaultValue={car_name}
                 render={({ field: { onChange, value, ref } }) => (
-                  <Select
+                  <CreatableSelect
                     inputRef={ref}
                     value={
-                      vehicleOptions.find((c) => c.value === value) || null
+                      vehicleOptions.find((c) => c.value === value) ||
+                      (value ? { value, label: value } : null)
                     }
-                    onChange={(val) => onChange(val ? val.value : "")}
+                    onChange={(val) => {
+                      if (val) {
+                        onChange(val.value);
+                      } else {
+                        onChange("");
+                      }
+                    }}
                     options={vehicleOptions}
                     placeholder="গাড়ির নাম..."
                     className="mt-1 text-sm"
                     classNamePrefix="react-select"
                     isClearable
+                    formatCreateLabel={(inputValue) =>
+                      `নতুন যোগ করুন: "${inputValue}"`
+                    }
                   />
                 )}
               />
@@ -270,18 +284,27 @@ const UpdateBooking = () => {
                 rules={{ required: false }}
                 defaultValue={car_number}
                 render={({ field: { onChange, value, ref } }) => (
-                  <Select
+                  <CreatableSelect
                     inputRef={ref}
                     value={
                       vehicleNumberOptions.find((c) => c.value === value) ||
-                      null
+                      (value ? { value, label: value } : null)
                     }
-                    onChange={(val) => onChange(val ? val.value : "")}
+                    onChange={(val) => {
+                      if (val) {
+                        onChange(val.value);
+                      } else {
+                        onChange("");
+                      }
+                    }}
                     options={vehicleNumberOptions}
                     placeholder="গাড়ির নাম্বার..."
                     className="mt-1 text-sm"
                     classNamePrefix="react-select"
                     isClearable
+                    formatCreateLabel={(inputValue) =>
+                      `নতুন যোগ করুন: "${inputValue}"`
+                    }
                   />
                 )}
               />
