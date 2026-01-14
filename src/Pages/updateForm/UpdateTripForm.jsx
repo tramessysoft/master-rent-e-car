@@ -24,6 +24,7 @@ const UpdateTripForm = () => {
     unload_point,
     driver_contact,
     driver_percentage,
+    company_comission,
     fuel_price,
     gas_price,
     other_expenses,
@@ -40,6 +41,7 @@ const UpdateTripForm = () => {
       vehicle_number: vehicle_number || "",
       rate: updateTripLoaderData.data.rate || "",
       driver_percentage: driver_percentage || 0,
+      company_comission: company_comission|| 0,
       fuel_price: fuel_price || 0,
       gas_price: gas_price || 0,
       demarage: demarage || 0,
@@ -81,22 +83,49 @@ const UpdateTripForm = () => {
   const gas = parseFloat(watch("gas_price") || 0);
   const totalDamarage = parseFloat(watch("demarage") || 0);
   const other = parseFloat(watch("other_expenses") || 0);
-  const total = commision + fuel + gas + totalDamarage + other;
+  // const total = commision + fuel + gas + totalDamarage + other;
   // commission rate options
-  const tripPrice = parseFloat(watch("trip_price") || 0);
-  const rate = parseFloat(watch("rate") || 0);
-
-  // driver commission calculation
-  const driverCommission = (tripPrice * rate) / 100;
-  useEffect(() => {
-    if (tripPrice > 0 && rate > 0) {
-      setValue("driver_percentage", driverCommission.toFixed(2));
-    } else {
-      setValue("driver_percentage", "");
-    }
-  }, [tripPrice, rate, setValue]);
-  // watch transport type
+  const tripPrice = Number(watch("trip_price") || 0);
+  const rate = Number(watch("rate") || 0);
   const selectedTransport = watch("transport_type");
+
+  //  calculat comission
+  useEffect(() => {
+    // সব required value না থাকলে কিছু করবো না
+    if (
+      selectedTransport === undefined ||
+      selectedTransport === "" ||
+      tripPrice <= 0 ||
+      rate <= 0
+    ) {
+      return;
+    }
+
+    const commission = (tripPrice * rate) / 100;
+
+    if (selectedTransport === "Own Car") {
+      setValue("driver_percentage", commission, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+
+    if (selectedTransport === "Self Car") {
+      setValue("company_comission", commission, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [tripPrice, rate, selectedTransport, setValue]);
+  const driverCommission = parseFloat(watch("driver_percentage") || 0);
+  const companyCommission = parseFloat(watch("company_comission") || 0);
+
+  const total =
+    selectedTransport === "Own Car"
+      ? driverCommission + fuel + gas + totalDamarage + other
+      : companyCommission;
+
+  // submit function
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
@@ -222,12 +251,12 @@ const UpdateTripForm = () => {
                   className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
                 >
                   <option value={`${transport_type}`}>{transport_type}</option>
-                  <option value="নিজস্ব গাড়ী">নিজস্ব গাড়ী</option>
-                  <option value="ভেন্ডরের গাড়ী">ভেন্ডরের গাড়ী</option>
+                  <option value="Own Car">নিজস্ব গাড়ী</option>
+                  <option value="Self Car">সেল্প ড্রাইব</option>
                 </select>
                 <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
               </div>
-              {selectedTransport === "ভেন্ডরের গাড়ী" ? (
+              {selectedTransport === "Self Car" ? (
                 <>
                   {/* Existing Vehicle Number Field */}
                   <div className="mt-2 md:mt-1 w-full relative">
@@ -513,7 +542,7 @@ const UpdateTripForm = () => {
                 </select>
                 <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
               </div>
-              <div className="mt-2 md:mt-1 w-full relative">
+              {selectedTransport === "Own Car" ? (<div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের কমিশন <span className="text-red-500">*</span>
                 </label>
@@ -525,8 +554,22 @@ const UpdateTripForm = () => {
                   readOnly
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
-              </div>
-              <div className="w-full relative">
+              </div>) : (
+                <div className="mt-2 md:mt-1 w-full relative">
+                  <label className="text-primary text-sm font-semibold">
+                    ড্রাইভারের কমিশন <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    {...register("company_comission", { required: true })}
+                    defaultValue={company_comission}
+                    type="number"
+                    placeholder="ড্রাইভারের কমিশন..."
+                    readOnly
+                    className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                  />
+                </div>
+              )}
+              {selectedTransport === "Own Car" &&(<><div className="w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   তেলের মূল্য
                 </label>
@@ -549,9 +592,9 @@ const UpdateTripForm = () => {
                   placeholder="গ্যাসের মূল্য..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
-              </div>
+              </div></>)}
             </div>
-            <div className="mt-1 md:flex justify-between gap-3">
+            {selectedTransport === "Own Car" &&<div className="mt-1 md:flex justify-between gap-3">
               <div className="mt-2 md:mt-0 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   অন্যান্য খরচ
@@ -588,7 +631,7 @@ const UpdateTripForm = () => {
                   className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
                 />
               </div>
-            </div>
+            </div>}
           </div>
           {/* Submit Button */}
           <div className="text-left">

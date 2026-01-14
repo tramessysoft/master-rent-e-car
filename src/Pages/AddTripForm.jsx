@@ -18,14 +18,16 @@ const AddTripForm = () => {
     control,
     formState: { errors },
     setValue,
-  } = useForm();
+  } = useForm({
+     shouldUnregister: false,
+  });
   const tripDateRef = useRef(null);
-  const commision = parseFloat(watch("driver_percentage") || 0);
+  // const commision = parseFloat(watch("driver_percentage") || 0);
   const fuel = parseFloat(watch("fuel_price") || 0);
   const gas = parseFloat(watch("gas_price") || 0);
   const totalDamarage = parseFloat(watch("demarage") || 0);
   const other = parseFloat(watch("other_expenses") || 0);
-  const total = commision + fuel + gas + totalDamarage + other;
+  // const total = commision + fuel + gas + totalDamarage + other;
 
   // driver name
   const [drivers, setDrivers] = useState([]);
@@ -56,22 +58,50 @@ const AddTripForm = () => {
     contact: driver.contact,
   }));
   // commission rate options
-  const tripPrice = parseFloat(watch("trip_price") || 0);
-  const rate = parseFloat(watch("rate") || 0);
+const tripPrice = Number(watch("trip_price") || 0);
+const rate = Number(watch("rate") || 0);
+const selectedTransport = watch("transport_type");
 
-  // driver commission calculation
-  const driverCommission = (tripPrice * rate) / 100;
-  useEffect(() => {
-    if (tripPrice > 0 && rate > 0) {
-      setValue("driver_percentage", driverCommission.toFixed(2));
-    } else {
-      setValue("driver_percentage", "");
-    }
-  }, [tripPrice, rate, setValue]);
-  // watch transport type
-  const selectedTransport = watch("transport_type");
+useEffect(() => {
+  // সব required value না থাকলে কিছু করবো না
+  if (
+    selectedTransport === undefined ||
+    selectedTransport === "" ||
+    tripPrice <= 0 ||
+    rate <= 0
+  ) {
+    return;
+  }
+
+  const commission = (tripPrice * rate) / 100;
+
+  if (selectedTransport === "Own Car") {
+    setValue("driver_percentage", commission, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }
+
+  if (selectedTransport === "Self Car") {
+    setValue("company_comission", commission, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }
+}, [tripPrice, rate, selectedTransport, setValue]);
+
+
+const driverCommission = parseFloat(watch("driver_percentage") || 0);
+const companyCommission = parseFloat(watch("company_comission") || 0);
+
+const total =
+  selectedTransport === "Own Car"
+    ? driverCommission + fuel + gas + totalDamarage + other
+    : companyCommission;
+
   // post data on server
   const onSubmit = async (data) => {
+    console.log(data, "d")
     try {
       const formData = new FormData();
       for (const key in data) {
@@ -204,15 +234,15 @@ const AddTripForm = () => {
                   className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
                 >
                   <option value="">ট্রান্সপোর্ট টাইপ...</option>
-                  <option value="নিজস্ব গাড়ী">নিজস্ব গাড়ী</option>
-                  <option value="ভেন্ডরের গাড়ী">ভেন্ডরের গাড়ী</option>
+                  <option value="Own Car">নিজস্ব গাড়ী</option>
+                  <option value="Self Car">সেল্প ড্রাইব</option>
                 </select>
                 <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
                 {errors.vehicle_number && (
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
               </div>
-              {selectedTransport === "ভেন্ডরের গাড়ী" ? (
+              {selectedTransport === "Self Car" ? (
                 <>
                   {/* Existing Vehicle Number Field */}
                   <div className="mt-2 md:mt-1 w-full relative">
@@ -418,7 +448,7 @@ const AddTripForm = () => {
                 </label>
                 <input
                   {...register("trip_price", { required: true })}
-                  type="text"
+                  type="number"
                   placeholder="ট্রিপের ভাড়া..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
@@ -450,7 +480,7 @@ const AddTripForm = () => {
                   কমিশন রেট
                 </label>
                 <select
-                  {...register("rate")}
+                  {...register("rate", { required: true })}
                   className="mt-1 w-full text-gray-500 text-sm border border-gray-300 bg-white p-2 rounded appearance-none outline-none"
                 >
                   <option value="">কমিশন রেট...</option>
@@ -464,7 +494,7 @@ const AddTripForm = () => {
                 </select>
                 <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
               </div>
-              <div className="mt-2 md:mt-1 w-full relative">
+              {selectedTransport === "Own Car" ? (<div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ড্রাইভারের কমিশন <span className="text-red-500">*</span>
                 </label>
@@ -477,8 +507,25 @@ const AddTripForm = () => {
                 {errors.driver_percentage && (
                   <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
                 )}
-              </div>
-              <div className="w-full relative">
+              </div>) :
+                (
+                  <div className="mt-2 md:mt-1 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      কোম্পানি কমিশন <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      {...register("company_comission", { required: true })}
+                      type="number"
+                      placeholder="কোম্পানি কমিশন..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                    {errors.company_comission && (
+                      <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                    )}
+                  </div>
+                )
+              }
+              {selectedTransport === "Own Car" &&(<><div className="w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   তেলের মূল্য
                 </label>
@@ -499,9 +546,9 @@ const AddTripForm = () => {
                   placeholder="গ্যাসের মূল্য..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
-              </div>
+              </div></>)}
             </div>
-            <div className="md:flex justify-between gap-3">
+            {selectedTransport === "Own Car" &&<div className="md:flex justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   অন্যান্য খরচ
@@ -538,7 +585,7 @@ const AddTripForm = () => {
                   className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
                 />
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* Submit Button */}

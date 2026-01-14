@@ -131,80 +131,6 @@ const TripList = () => {
       profit,
     };
   });
-  // export excel
-  const exportExcel = () => {
-    // Define English headers you want in the Excel file
-    const headers = [
-      "Index",
-      "Trip Date",
-      "Driver Name",
-      "Driver Contact",
-      "Driver Percentage",
-      "Load Point",
-      "Unload Point",
-      "Trip Time",
-      "Total Cost",
-      "Trip Price",
-      "Profit",
-    ];
-
-    // Map the csvData to match the headers
-    const formattedData = csvData.map((item, index) => ({
-      Index: index + 1,
-      "Trip Date": item.trip_date,
-      "Driver Name": item.driver_name,
-      "Driver Contact": item.driver_contact,
-      "Driver Percentage": item.driver_percentage,
-      "Load Point": item.load_point,
-      "Unload Point": item.unload_point,
-      "Trip Time": item.trip_time,
-      "Total Cost": item.totalCost,
-      "Trip Price": item.trip_price,
-      Profit: item.profit,
-    }));
-
-    // Generate worksheet with custom header order
-    const worksheet = XLSX.utils.json_to_sheet(formattedData, {
-      header: headers,
-    });
-
-    // Create and export workbook
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Trip Data");
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-
-    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(data, "trip_data.xlsx");
-  };
-  const printTable = () => {
-    // hide specific column
-    const actionColumns = document.querySelectorAll(".action_column");
-    actionColumns.forEach((col) => {
-      col.style.display = "none";
-    });
-    const printContent = document.querySelector("table").outerHTML;
-    const WinPrint = window.open("", "", "width=900,height=650");
-    WinPrint.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-          <style>
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-          </style>
-        </head>
-        <body>${printContent}</body>
-      </html>
-    `);
-    WinPrint.document.close();
-    WinPrint.focus();
-    WinPrint.print();
-    WinPrint.close();
-  };
   // Filter trips by search term and date range
   const filteredTrip = trip.filter((dt) => {
     const term = searchTerm.toLowerCase();
@@ -228,6 +154,91 @@ const TripList = () => {
       (!endDate || new Date(tripDate) <= new Date(endDate));
     return matchesSearch && matchesDateRange;
   });
+
+  const exportExcel = () => {
+  // Map filtered data to match table columns
+  const formattedData = filteredData.map((dt, index) => {
+    const demarage = parseFloat(dt.demarage ?? "0") || 0;
+    const fuel = parseFloat(dt.fuel_price ?? "0") || 0;
+    const gas = parseFloat(dt.gas_price ?? "0") || 0;
+    const others = parseFloat(dt.other_expenses ?? "0") || 0;
+    const commision = parseFloat(dt.driver_percentage ?? "0") || 0;
+
+    const totalCost = (
+      demarage + fuel + gas + others + commision
+    ).toFixed(2);
+
+    const profit =
+      dt.transport_type === "Own Car"
+        ? (dt.trip_price - totalCost).toFixed(2)
+        : ((dt.trip_price * dt.rate) / 100).toFixed(2);
+
+    return {
+      "#": index + 1,
+      "তারিখ": dt.trip_date,
+      "ড্রাইভার নাম": dt.driver_name,
+      "ড্রাইভার মোবাইল": dt.driver_contact,
+      "ট্রান্সপোর্ট টাইপ" : dt.transport_type,
+      "কমিশন রেট" : dt.rate,
+      "ড্রাইভার কমিশন": dt.driver_percentage,
+      "কোম্পানি কমিশন": dt.company_comission,
+      "লোড পয়েন্ট": dt.load_point,
+      "আনলোড পয়েন্ট": dt.unload_point,
+      "ট্রিপের সময়": dt.trip_time,
+      "কাস্টমারের নাম": dt.customer,
+      "কাস্টমারের মোবাইল": dt.customer_mobile,
+      "ট্রিপের ভাড়া": dt.trip_price,     
+      "তেলের মূল্য": dt.fuel_price,
+      "গ্যাসের মূল্য": dt.gas_price,
+      "অন্যান্য খরচ":dt.other_expenses,
+      "ট্রিপের খরচ": totalCost,
+      "লাভ": profit,
+    };
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(formattedData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Trip Data");
+
+  XLSX.writeFile(workbook, "trip_data.xlsx");
+};
+
+// Print Function
+const printTable = () => {
+  // hide action column while printing
+  const actionColumns = document.querySelectorAll(".action_column");
+  actionColumns.forEach((col) => {
+    col.style.display = "none";
+  });
+
+  const printContent = document.querySelector("table").outerHTML;
+
+  const WinPrint = window.open("", "", "width=1000,height=800");
+  WinPrint.document.write(`
+    <html>
+      <head>
+        <title>Trip List</title>
+        <style>
+          body { font-family: Arial, sans-serif; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #000; padding: 6px; text-align: left; font-size: 12px; }
+          th { background-color: #11375B; color: white; }
+        </style>
+      </head>
+      <body>
+        ${printContent}
+      </body>
+    </html>
+  `);
+  WinPrint.document.close();
+  WinPrint.focus();
+  WinPrint.print();
+
+  // show action columns back
+  actionColumns.forEach((col) => {
+    col.style.display = "";
+  });
+};
 
   // pagination
   const itemsPerPage = 10;
@@ -276,7 +287,6 @@ const TripList = () => {
     }
     return pages;
   };
-  console.log("trip", trip);
   return (
     <main className="bg-gradient-to-br from-gray-100 to-white md:p-6">
       <Toaster />
@@ -448,9 +458,9 @@ const TripList = () => {
                       </p>
                     </td>
                     <td className="p-2">{dt.trip_price}</td>
-                    <td className="p-2">{totalCost}</td>
+                    <td className="p-2">{dt.transport_type === "Own car" ? totalCost: dt.rate}</td>
                     <td className="p-2">
-                      {(dt.trip_price - totalCost).toFixed(2)}
+                      {dt.transport_type === "Own car" ? (dt.trip_price - totalCost).toFixed(2) : (dt.trip_price* dt.rate)/100}
                     </td>
                     {user.data.user.role === "User" ? (
                       ""
