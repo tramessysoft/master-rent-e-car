@@ -566,13 +566,13 @@ const UpdateTripForm = () => {
               </div>) : (
                 <div className="mt-2 md:mt-1 w-full relative">
                   <label className="text-primary text-sm font-semibold">
-                    ড্রাইভারের কমিশন <span className="text-red-500">*</span>
+                    কোম্পানি কমিশন <span className="text-red-500">*</span>
                   </label>
                   <input
                     {...register("company_comission", { required: true })}
                     defaultValue={company_comission}
                     type="number"
-                    placeholder="ড্রাইভারের কমিশন..."
+                    placeholder="কোম্পানি কমিশন..."
                     readOnly
                     className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                   />

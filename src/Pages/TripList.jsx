@@ -274,6 +274,7 @@ const printTable = () => {
           নামঃ ${dt.customer ?? ""}<br/>
           মোবাইলঃ ${dt.customer_mobile ?? ""}
         </td>
+        <td>${dt.transport_type}</td>
         <td>${dt.trip_price}</td>
         <td>${demarage}</td>
         <td>${totalCost}</td>
@@ -326,6 +327,7 @@ const printTable = () => {
               <th>ড্রাইভার ইনফো</th>
               <th>ট্রিপ ও গন্তব্য</th>
               <th>কাস্টমার</th>
+              <th>ট্রিপ টাইপ</th>
               <th>ভাড়া</th>
               <th>ওয়েটিং</th>
               <th>খরচ</th>
@@ -396,7 +398,7 @@ const printTable = () => {
   return (
     <main className="">
       <Toaster />
-      <div className="w-xs md:w-full overflow-hidden overflow-x-auto max-w-7xl mx-auto bg-white/80 backdrop-blur-md shadow-xl rounded-xl p-2 py-10 md:p-8 border border-gray-200">
+      <div className="w-xs md:w-full overflow-hidden overflow-x-auto max-w-7xl mx-auto bg-white/80 backdrop-blur-md shadow-xl rounded-xl p-2 py-10 md:p-4 border border-gray-200">
         {/* Header */}
         <div className="md:flex items-center justify-between mb-6">
           <h1 className="text-xl font-extrabold text-[#11375B] flex items-center gap-3">
@@ -501,6 +503,7 @@ const printTable = () => {
                 <th className="p-2">ড্রাইভার ইনফো</th>
                 <th className="p-2">ট্রিপ এবং গন্তব্য</th>
                 <th className="p-2">কাস্টমারের তথ্য</th>
+                <th className="p-2">ট্রিপ টাইপ</th>
                 <th className="p-2">ট্রিপের ভাড়া</th>
                 <th className="p-2">ওয়েটিং চার্জ</th>
                 <th className="p-2">ট্রিপের খরচ</th>
@@ -555,7 +558,7 @@ const printTable = () => {
                           hour12: true,
                         })}
                       </p>
-                    </td>
+                    </td>                    
                     <td className="p-2">
                       <p>
                         কাস্টমারের নামঃ <p>{dt.customer}</p>
@@ -564,6 +567,7 @@ const printTable = () => {
                         কাস্টমারের মোবাইলঃ <p>{dt.customer_mobile}</p>
                       </p>
                     </td>
+                    <td className="p-2">{dt.transport_type}</td>
                     <td className="p-2">{dt.trip_price}</td>
                      <td className="p-2">{dt.demarage}</td>
                     {/* <td className="p-2">{dt.transport_type === "Own Car" ? totalCost: dt.rate}</td>
