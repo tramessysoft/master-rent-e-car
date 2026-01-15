@@ -155,12 +155,43 @@ const OverViewCard = () => {
           (sum, trip) => sum + parseFloat(trip.driver_percentage || 0),
           0
         );
-        // Sum today's trip income
-        const totalTripIncome = todayTrips.reduce(
-          (sum, trip) => sum + parseFloat(trip.trip_price || 0),
-          0
-        );
 
+        const totalTripIncome = todayTrips.reduce((sum, trip) => {
+          const tripPrice = Number(trip.trip_price ?? 0);
+          const demarage = Number(trip.demarage ?? 0);
+          const rate = Number(trip.rate ?? 0);
+          const fuel = parseFloat(trip.fuel_price ?? "0") || 0;
+          const gas = parseFloat(trip.gas_price ?? "0") || 0;
+          const others = parseFloat(trip.other_expenses ?? "0") || 0;
+          const commision = trip.driver_percentage;
+          const totalCost = (
+            Number(fuel) +
+            Number(gas) +
+            Number(others) +
+            Number(commision)
+          ).toFixed(2);
+
+          const revenue = tripPrice + demarage;
+
+          const isOwnCar =
+            trip.transport_type?.toLowerCase() === "own car";
+
+          if (isOwnCar) {
+            const ownRevenue = revenue - totalCost
+            // Own Car → full revenue
+            return sum + ownRevenue;
+          } else {
+            // Vendor → percentage income
+            return sum + (revenue * rate) / 100;
+          }
+        }, 0);
+
+        setTodayIncome(totalTripIncome.toFixed(2));
+        // Sum today's trip income
+        // const totalTripIncome = todayTrips.reduce(
+        //   (sum, trip) => sum + parseFloat(trip.trip_price || 0),
+        //   0
+        // );
         setOtherExpenses(totalOtherExpenses);
         setDemarage(totalDemarage);
         setDriverCommission(totalCommission);
@@ -172,7 +203,8 @@ const OverViewCard = () => {
 
     fetchTripData();
   }, []);
-  const totalCommission = otherExpenses + demarage + driverCommission;
+
+  const totalCommission = otherExpenses + driverCommission;
 
   // total expense
   const totalExpense = totalCost + todayCost + totalCommission;
