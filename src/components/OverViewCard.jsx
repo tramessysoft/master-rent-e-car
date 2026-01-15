@@ -139,11 +139,14 @@ const OverViewCard = () => {
         // Filter trips that happened today only
         const todayTrips = data.filter((trip) => trip.trip_date === today);
 
-        // Sum today's other expenses
-        const totalOtherExpenses = todayTrips.reduce(
-          (sum, trip) => sum + parseFloat(trip.other_expenses || 0),
-          0
-        );
+        // Sum today's total trip expenses (other + fuel + gas)
+const totalTripExpenses = todayTrips.reduce((sum, trip) => {
+  const other = parseFloat(trip.other_expenses || 0);
+  const fuel = parseFloat(trip.fuel_price || 0);
+  const gas = parseFloat(trip.gas_price || 0);
+
+  return sum + other + fuel + gas;
+}, 0);
 
         // Sum today's demarage
         const totalDemarage = todayTrips.reduce(
@@ -192,7 +195,7 @@ const OverViewCard = () => {
         //   (sum, trip) => sum + parseFloat(trip.trip_price || 0),
         //   0
         // );
-        setOtherExpenses(totalOtherExpenses);
+        setOtherExpenses(totalTripExpenses);
         setDemarage(totalDemarage);
         setDriverCommission(totalCommission);
         setTodayIncome(totalTripIncome);
@@ -204,10 +207,10 @@ const OverViewCard = () => {
     fetchTripData();
   }, []);
 
-  const totalCommission = otherExpenses + driverCommission;
+  const todayExpense = otherExpenses + driverCommission;
 
   // total expense
-  const totalExpense = totalCost + todayCost + totalCommission;
+  const totalExpense = totalCost + todayCost + todayExpense;
   return (
     <div className="md:p-5">
       <ul className="md:flex gap-3">
@@ -253,7 +256,7 @@ const OverViewCard = () => {
               <div className="bg-primary w-[6px] h-[6px] rounded-full" />
               <p className="flex justify-between w-full">
                 <span>ট্রিপ খরচ</span> -{" "}
-                <span>{totalCommission.toFixed(2)} টাকা</span>
+                <span>{todayExpense.toFixed(2)} টাকা</span>
               </p>
             </div>
             <div className="flex items-center gap-3">
