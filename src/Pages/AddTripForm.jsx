@@ -19,7 +19,7 @@ const AddTripForm = () => {
     formState: { errors },
     setValue,
   } = useForm({
-     shouldUnregister: false,
+    shouldUnregister: false,
   });
   const tripDateRef = useRef(null);
   // const commision = parseFloat(watch("driver_percentage") || 0);
@@ -58,46 +58,43 @@ const AddTripForm = () => {
     contact: driver.contact,
   }));
   // commission rate options
-const tripPrice = Number(watch("trip_price") || 0);
-const rate = Number(watch("rate") || 0);
-const selectedTransport = watch("transport_type");
+  const tripPrice = Number(watch("trip_price") || 0);
+  const rate = Number(watch("rate") || 0);
+  const selectedTransport = watch("transport_type");
 
-useEffect(() => {
-  // সব required value না থাকলে কিছু করবো না
-  if (
-    selectedTransport === undefined ||
-    selectedTransport === "" ||
-    tripPrice <= 0 ||
-    rate <= 0
-  ) {
-    return;
-  }
+  useEffect(() => {
+    // সব required value না থাকলে কিছু করবো না
+    if (
+      selectedTransport === undefined ||
+      selectedTransport === "" ||
+      tripPrice <= 0 ||
+      rate <= 0
+    ) {
+      return;
+    }
 
-  const commission = (tripPrice * rate) / 100;
+    const commission = (tripPrice * rate) / 100;
 
-  if (selectedTransport === "Own Car") {
-    setValue("driver_percentage", commission, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  }
+    if (selectedTransport === "Own Car") {
+      setValue("driver_percentage", commission, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
 
-  if (selectedTransport === "Self Car") {
-    setValue("company_comission", commission, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  }
-}, [tripPrice, rate, selectedTransport, setValue]);
+    if (selectedTransport === "Self Car") {
+      setValue("company_comission", commission, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [tripPrice, rate, selectedTransport, setValue]);
 
 
-const driverCommission = parseFloat(watch("driver_percentage") || 0);
-const companyCommission = parseFloat(watch("company_comission") || 0);
+  const driverCommission = parseFloat(watch("driver_percentage") || 0);
+  const companyCommission = parseFloat(watch("company_comission") || 0);
 
-const total =
-  selectedTransport === "Own Car"
-    ? driverCommission + fuel + gas + totalDamarage + other
-    : companyCommission;
+  const total = driverCommission + fuel + gas + other;
 
   // post data on server
   const onSubmit = async (data) => {
@@ -413,7 +410,7 @@ const total =
                 কাস্টমার এবং পেমেন্ট তথ্য
               </span>
             </h5>
-            <div className="md:flex justify-between gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   কাস্টমারের নাম <span className="text-red-500">*</span>
@@ -467,6 +464,20 @@ const total =
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
+              <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  ওয়েটিং চার্জ
+                </label>
+                <input
+                  {...register("demarage")}
+                  type="number"
+                  placeholder="ওয়েটিং চার্জ..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+                {errors.demarage && (
+                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
+                )}
+              </div>
             </div>
           </div>
           {/*  */}
@@ -474,7 +485,7 @@ const total =
             <h5 className="text-primary font-semibold text-center pb-5">
               <span className="py-2 border-b-2 border-primary">চলমান খরচ</span>
             </h5>
-            <div className="md:flex justify-between gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   কমিশন রেট
@@ -525,7 +536,7 @@ const total =
                   </div>
                 )
               }
-              {selectedTransport === "Own Car" &&(<><div className="w-full relative">
+              {selectedTransport === "Own Car" && (<><div className="w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   তেলের মূল্য
                 </label>
@@ -536,20 +547,18 @@ const total =
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
-              <div className="mt-2 md:mt-0 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  গ্যাসের মূল্য
-                </label>
-                <input
-                  {...register("gas_price")}
-                  type="text"
-                  placeholder="গ্যাসের মূল্য..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div></>)}
-            </div>
-            {selectedTransport === "Own Car" &&<div className="md:flex justify-between gap-3">
-              <div className="mt-2 md:mt-1 w-full relative">
+                <div className="mt-2 md:mt-0 w-full relative">
+                  <label className="text-primary text-sm font-semibold">
+                    গ্যাসের মূল্য
+                  </label>
+                  <input
+                    {...register("gas_price")}
+                    type="text"
+                    placeholder="গ্যাসের মূল্য..."
+                    className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                  />
+                </div>
+                <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   অন্যান্য খরচ
                 </label>
@@ -560,20 +569,7 @@ const total =
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  ওয়েটিং চার্জ
-                </label>
-                <input
-                  {...register("demarage")}
-                  type="number"
-                  placeholder="ওয়েটিং চার্জ..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-                {errors.demarage && (
-                  <span className="text-red-600 text-sm">পূরণ করতে হবে</span>
-                )}
-              </div>
+
               <div className="mt-1 w-full">
                 <label className="text-primary text-sm font-semibold">
                   ট্রিপের খরচ
@@ -585,7 +581,9 @@ const total =
                   className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
                 />
               </div>
-            </div>}
+                </>)}
+            </div>
+           
           </div>
 
           {/* Submit Button */}

@@ -120,10 +120,7 @@ const UpdateTripForm = () => {
   const driverCommission = parseFloat(watch("driver_percentage") || 0);
   const companyCommission = parseFloat(watch("company_comission") || 0);
 
-  const total =
-    selectedTransport === "Own Car"
-      ? driverCommission + fuel + gas + totalDamarage + other
-      : companyCommission;
+  const total = driverCommission + fuel + gas + other;
 
   // submit function
   const onSubmit = async (data) => {
@@ -478,7 +475,7 @@ const UpdateTripForm = () => {
                 কাস্টমার এবং পেমেন্ট তথ্য
               </span>
             </h5>
-            <div className="md:flex justify-between gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   কাস্টমারের নাম
@@ -515,6 +512,18 @@ const UpdateTripForm = () => {
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
+               <div className="mt-2 md:mt-1 w-full relative">
+                <label className="text-primary text-sm font-semibold">
+                  ওয়েটিং চার্জ
+                </label>
+                <input
+                  {...register("demarage")}
+                  defaultValue={demarage}
+                  type="number"
+                  placeholder="ওয়েটিং চার্জ..."
+                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                />
+              </div>
             </div>
           </div>
           {/*  */}
@@ -522,7 +531,7 @@ const UpdateTripForm = () => {
             <h5 className="text-primary font-semibold text-center pb-5">
               <span className="py-2 border-b-2 border-primary">চলমান খরচ</span>
             </h5>
-            <div className="md:flex justify-between gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 justify-between gap-3">
               <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   কমিশন রেট
@@ -592,9 +601,7 @@ const UpdateTripForm = () => {
                   placeholder="গ্যাসের মূল্য..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
-              </div></>)}
-            </div>
-            {selectedTransport === "Own Car" &&<div className="mt-1 md:flex justify-between gap-3">
+              </div>
               <div className="mt-2 md:mt-0 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   অন্যান্য খরচ
@@ -604,18 +611,6 @@ const UpdateTripForm = () => {
                   defaultValue={other_expenses}
                   type="number"
                   placeholder="অন্যান্য খরচ..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
-              <div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  জরিমানা
-                </label>
-                <input
-                  {...register("demarage")}
-                  defaultValue={demarage}
-                  type="number"
-                  placeholder="জরিমানা..."
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
@@ -631,7 +626,8 @@ const UpdateTripForm = () => {
                   className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
                 />
               </div>
-            </div>}
+              </>)}
+            </div>
           </div>
           {/* Submit Button */}
           <div className="text-left">
