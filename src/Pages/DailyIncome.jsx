@@ -256,8 +256,8 @@ const DailyIncome = () => {
                 <th className="p-2">#</th>
                 <th className="p-2">তারিখ</th>
                 <th className="p-2">গাড়ি</th>
-                <th className="p-2">লোড</th>
-                <th className="p-2">আনলোড</th>
+                <th className="p-2">পিকআপ পয়েন্ট</th>
+                <th className="p-2">ড্রপ পয়েন্ট</th>
                 <th className="p-2">ট্রিপের ভাড়া</th>
                 <th className="p-2">চলমানখরচ</th>
                 <th className="p-2">লাভ</th>
