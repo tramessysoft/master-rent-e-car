@@ -7,7 +7,7 @@ import {
   FaBriefcase,
   FaUser,
 } from "react-icons/fa6";
-import logo from "../assets/po.jpeg";
+import logo from "../assets/tramessy.png";
 import avatar from "../assets/avatar.png";
 import { Link, useLocation } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
@@ -35,13 +35,13 @@ const Sidebar = () => {
     <div className="overflow-y-scroll hide-scrollbar">
       <main>
         {/* Logo */}
-        <div className="flex ml-3 items-center gap-3 py-3 border-b border-gray-300">     
+        <div className="flex items-center justify-center gap-3 py-3 border-b border-gray-300">     
             <Link to="/">
-              <img src={logo} alt="Logo" className="w-6" />
+              <img src={logo} alt="Logo" className="w-22" />
             </Link>
-            <div className="text-xs text-primary">
+            {/* <div className="text-xs text-primary">
               <div className="font-semibold text-xl py-2">পৌঁছাও</div>
-            </div>
+            </div> */}
         </div>
 
         {/* Navigation */}
