@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { forwardRef } from "react";
-import parklineLogo from "../assets/po.jpeg";
+import parklineLogo from "../assets/tramessy.png";
 const BookingInvoice = forwardRef(({ data }, ref) => {
   const {
     customer_name,
@@ -34,7 +34,7 @@ const BookingInvoice = forwardRef(({ data }, ref) => {
               <img src={parklineLogo} alt="" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">পোঁছাও</h1>
+              {/* <h1 className="text-xl font-bold">পোঁছাও</h1> */}
               <p className="text-gray-600 text-xs">কার রেন্টাল</p>
             </div>
           </div>
