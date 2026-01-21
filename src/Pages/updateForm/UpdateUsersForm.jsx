@@ -31,13 +31,13 @@ const UpdateUsersForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://pochao.tramessy.com/backend/api/users/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/users/${id}`,
         data,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const resData = response.data;

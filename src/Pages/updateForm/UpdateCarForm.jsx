@@ -35,11 +35,11 @@ const UpdateCarForm = () => {
   const taxDateRef = useRef(null);
   const roadPermitRef = useRef(null);
   const fitnessDateRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // select driver
   const [drivers, setDrivers] = useState([]);
   useEffect(() => {
-    fetch("https://pochao.tramessy.com/backend/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -53,19 +53,19 @@ const UpdateCarForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://pochao.tramessy.com/backend/api/vehicle/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`,
         data,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const resData = response.data;
       if (resData.status === "Vehicle updated successfully") {
         toast.success("গাড়ি সফলভাবে আপডেট হয়েছে!", { position: "top-right" });
-        navigate("/CarList")
+        navigate("/CarList");
       } else {
         toast.error("সার্ভার ত্রুটি: " + (resData.message || "অজানা সমস্যা"));
       }

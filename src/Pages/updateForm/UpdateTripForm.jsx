@@ -41,7 +41,7 @@ const UpdateTripForm = () => {
       vehicle_number: vehicle_number || "",
       rate: updateTripLoaderData.data.rate || "",
       driver_percentage: driver_percentage || 0,
-      company_comission: company_comission|| 0,
+      company_comission: company_comission || 0,
       fuel_price: fuel_price || 0,
       gas_price: gas_price || 0,
       demarage: demarage || 0,
@@ -55,7 +55,7 @@ const UpdateTripForm = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://pochao.tramessy.com/backend/api/vehicle")
+    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -67,7 +67,7 @@ const UpdateTripForm = () => {
   }));
   // driver name
   useEffect(() => {
-    fetch("https://pochao.tramessy.com/backend/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -126,13 +126,13 @@ const UpdateTripForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        `https://pochao.tramessy.com/backend/api/trip/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/trip/${id}`,
         data,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const resData = response.data;
@@ -336,7 +336,7 @@ const UpdateTripForm = () => {
                           inputRef={ref}
                           value={
                             driverOptions.find(
-                              (option) => option.value === value
+                              (option) => option.value === value,
                             ) || null
                           }
                           onChange={(selectedOption) => {
@@ -345,11 +345,11 @@ const UpdateTripForm = () => {
 
                             // set mobile number
                             const matchedDriver = drivers.find(
-                              (d) => d.name === selectedName
+                              (d) => d.name === selectedName,
                             );
                             setValue(
                               "driver_contact",
-                              matchedDriver?.contact || ""
+                              matchedDriver?.contact || "",
                             );
                           }}
                           options={driverOptions}
@@ -512,7 +512,7 @@ const UpdateTripForm = () => {
                   className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
                 />
               </div>
-               <div className="mt-2 md:mt-1 w-full relative">
+              <div className="mt-2 md:mt-1 w-full relative">
                 <label className="text-primary text-sm font-semibold">
                   ওয়েটিং চার্জ
                 </label>
@@ -551,19 +551,21 @@ const UpdateTripForm = () => {
                 </select>
                 <MdOutlineArrowDropDown className="absolute top-[35px] right-2 pointer-events-none text-xl text-gray-500" />
               </div>
-              {selectedTransport === "Own Car" ? (<div className="mt-2 md:mt-1 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  ড্রাইভারের কমিশন <span className="text-red-500">*</span>
-                </label>
-                <input
-                  {...register("driver_percentage", { required: true })}
-                  defaultValue={driver_percentage}
-                  type="number"
-                  placeholder="ড্রাইভারের কমিশন..."
-                  readOnly
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>) : (
+              {selectedTransport === "Own Car" ? (
+                <div className="mt-2 md:mt-1 w-full relative">
+                  <label className="text-primary text-sm font-semibold">
+                    ড্রাইভারের কমিশন <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    {...register("driver_percentage", { required: true })}
+                    defaultValue={driver_percentage}
+                    type="number"
+                    placeholder="ড্রাইভারের কমিশন..."
+                    readOnly
+                    className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                  />
+                </div>
+              ) : (
                 <div className="mt-2 md:mt-1 w-full relative">
                   <label className="text-primary text-sm font-semibold">
                     কোম্পানি কমিশন <span className="text-red-500">*</span>
@@ -578,55 +580,58 @@ const UpdateTripForm = () => {
                   />
                 </div>
               )}
-              {selectedTransport === "Own Car" &&(<><div className="w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  তেলের মূল্য
-                </label>
-                <input
-                  {...register("fuel_price")}
-                  defaultValue={fuel_price}
-                  type="number"
-                  placeholder="তেলের মূল্য..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
-              <div className="mt-2 md:mt-0 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  গ্যাসের মূল্য
-                </label>
-                <input
-                  {...register("gas_price")}
-                  defaultValue={gas_price}
-                  type="number"
-                  placeholder="গ্যাসের মূল্য..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
-              <div className="mt-2 md:mt-0 w-full relative">
-                <label className="text-primary text-sm font-semibold">
-                  অন্যান্য খরচ
-                </label>
-                <input
-                  {...register("other_expenses")}
-                  defaultValue={other_expenses}
-                  type="number"
-                  placeholder="অন্যান্য খরচ..."
-                  className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
-                />
-              </div>
+              {selectedTransport === "Own Car" && (
+                <>
+                  <div className="w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      তেলের মূল্য
+                    </label>
+                    <input
+                      {...register("fuel_price")}
+                      defaultValue={fuel_price}
+                      type="number"
+                      placeholder="তেলের মূল্য..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
+                  <div className="mt-2 md:mt-0 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      গ্যাসের মূল্য
+                    </label>
+                    <input
+                      {...register("gas_price")}
+                      defaultValue={gas_price}
+                      type="number"
+                      placeholder="গ্যাসের মূল্য..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
+                  <div className="mt-2 md:mt-0 w-full relative">
+                    <label className="text-primary text-sm font-semibold">
+                      অন্যান্য খরচ
+                    </label>
+                    <input
+                      {...register("other_expenses")}
+                      defaultValue={other_expenses}
+                      type="number"
+                      placeholder="অন্যান্য খরচ..."
+                      className="mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-white outline-none"
+                    />
+                  </div>
 
-              <div className="w-full">
-                <label className="text-primary text-sm font-semibold">
-                  ট্রিপের খরচ
-                </label>
-                <input
-                  readOnly
-                  value={total}
-                  placeholder="ট্রিপের খরচ..."
-                  className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
-                />
-              </div>
-              </>)}
+                  <div className="w-full">
+                    <label className="text-primary text-sm font-semibold">
+                      ট্রিপের খরচ
+                    </label>
+                    <input
+                      readOnly
+                      value={total}
+                      placeholder="ট্রিপের খরচ..."
+                      className="cursor-not-allowed mt-1 w-full text-sm border border-gray-300 px-3 py-2 rounded bg-gray-200 outline-none"
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
           {/* Submit Button */}

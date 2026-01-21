@@ -40,7 +40,7 @@ const TripList = () => {
   // Fetch trips data
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/trip")
+      .get("https://rent.demo.tramessy.com/backend/api/trip")
       .then((response) => {
         if (response.data.status === "success") {
           const sortedData = response.data.data.sort((a, b) => {
@@ -60,10 +60,10 @@ const TripList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/trip/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/trip/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -90,7 +90,7 @@ const TripList = () => {
   const handleView = async (id) => {
     try {
       const response = await axios.get(
-        `https://pochao.tramessy.com/backend/api/trip/${id}`
+        `https://rent.demo.tramessy.com/backend/api/trip/${id}`,
       );
       if (response.data.status === "success") {
         setselectedTrip(response.data.data);
@@ -155,108 +155,107 @@ const TripList = () => {
 
   // calculation profit
   const calculateTripSummary = (dt) => {
-  const tripPrice = Number(dt.trip_price ?? 0);
-  const demarage = Number(dt.demarage ?? 0);
+    const tripPrice = Number(dt.trip_price ?? 0);
+    const demarage = Number(dt.demarage ?? 0);
 
-  const fuel = Number(dt.fuel_price ?? 0);
-  const gas = Number(dt.gas_price ?? 0);
-  const others = Number(dt.other_expenses ?? 0);
-  const driverCommission = Number(dt.driver_percentage ?? 0);
-  const rate = Number(dt.rate ?? 0);
+    const fuel = Number(dt.fuel_price ?? 0);
+    const gas = Number(dt.gas_price ?? 0);
+    const others = Number(dt.other_expenses ?? 0);
+    const driverCommission = Number(dt.driver_percentage ?? 0);
+    const rate = Number(dt.rate ?? 0);
 
-  const revenue = tripPrice + demarage;
+    const revenue = tripPrice + demarage;
 
-  const isOwnCar =
-    dt.transport_type?.toLowerCase() === "own car";
+    const isOwnCar = dt.transport_type?.toLowerCase() === "own car";
 
-  let totalCost = 0;
-  let profit = 0;
+    let totalCost = 0;
+    let profit = 0;
 
-  if (isOwnCar) {
-    totalCost = fuel + gas + others + driverCommission;
-    profit = revenue - totalCost;
-  } else {
-    // vendor / percentage based
-    totalCost = 0; // company does not bear cost
-    profit = (revenue * rate) / 100;
-  }
-
-  return {
-    revenue: revenue.toFixed(2),
-    totalCost: totalCost.toFixed(2),
-    profit: profit.toFixed(2),
-  };
-};
-
-
-  const exportExcel = () => {
-  // Map filtered data to match table columns
-  const formattedData = filteredData.map((dt, index) => {
-    const demarage = parseFloat(dt.demarage ?? "0") || 0;
-    const fuel = parseFloat(dt.fuel_price ?? "0") || 0;
-    const gas = parseFloat(dt.gas_price ?? "0") || 0;
-    const others = parseFloat(dt.other_expenses ?? "0") || 0;
-    const commision = parseFloat(dt.driver_percentage ?? "0") || 0;
-
-  //   const totalCost = (
-  //  fuel + gas + others + commision
-  //   ).toFixed(2);
-
-  //   const profit =
-  //     dt.transport_type === "Own Car"
-  //       ? ((dt.trip_price + demarage) - totalCost).toFixed(2)
-  //       : (((dt.trip_price + demarage) * dt.rate) / 100).toFixed(2);
-        const { totalCost, profit } = calculateTripSummary(dt);
+    if (isOwnCar) {
+      totalCost = fuel + gas + others + driverCommission;
+      profit = revenue - totalCost;
+    } else {
+      // vendor / percentage based
+      totalCost = 0; // company does not bear cost
+      profit = (revenue * rate) / 100;
+    }
 
     return {
-      "#": index + 1,
-      "তারিখ": dt.trip_date,
-      "ড্রাইভার নাম": dt.driver_name,
-      "ড্রাইভার মোবাইল": dt.driver_contact,
-      "ট্রান্সপোর্ট টাইপ" : dt.transport_type,
-      "কমিশন রেট" : dt.rate,
-      "ড্রাইভার কমিশন": dt.driver_percentage,
-      "কোম্পানি কমিশন": dt.company_comission,
-      "লোড পয়েন্ট": dt.load_point,
-      "আনলোড পয়েন্ট": dt.unload_point,
-      "ট্রিপের সময়": dt.trip_time,
-      "কাস্টমারের নাম": dt.customer,
-      "কাস্টমারের মোবাইল": dt.customer_mobile,
-      "ট্রিপের ভাড়া": dt.trip_price,  
-      "ওয়েটিং চার্জ": dt.demarage,  
-      "তেলের মূল্য": dt.fuel_price,
-      "গ্যাসের মূল্য": dt.gas_price,
-      "অন্যান্য খরচ":dt.other_expenses,
-      "ট্রিপের খরচ": totalCost,
-      "লাভ": profit,
+      revenue: revenue.toFixed(2),
+      totalCost: totalCost.toFixed(2),
+      profit: profit.toFixed(2),
     };
-  });
+  };
 
-  const worksheet = XLSX.utils.json_to_sheet(formattedData);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Trip Data");
+  const exportExcel = () => {
+    // Map filtered data to match table columns
+    const formattedData = filteredData.map((dt, index) => {
+      const demarage = parseFloat(dt.demarage ?? "0") || 0;
+      const fuel = parseFloat(dt.fuel_price ?? "0") || 0;
+      const gas = parseFloat(dt.gas_price ?? "0") || 0;
+      const others = parseFloat(dt.other_expenses ?? "0") || 0;
+      const commision = parseFloat(dt.driver_percentage ?? "0") || 0;
 
-  XLSX.writeFile(workbook, "trip_data.xlsx");
-};
+      //   const totalCost = (
+      //  fuel + gas + others + commision
+      //   ).toFixed(2);
 
-// Print Function
-const printTable = () => {
-  const printRows = filteredTrip.map((dt, index) => {
-    const demarage = parseFloat(dt.demarage ?? "0") || 0;
-    const fuel = parseFloat(dt.fuel_price ?? "0") || 0;
-    const gas = parseFloat(dt.gas_price ?? "0") || 0;
-    const others = parseFloat(dt.other_expenses ?? "0") || 0;
-    const commission = parseFloat(dt.driver_percentage ?? "0") || 0;
+      //   const profit =
+      //     dt.transport_type === "Own Car"
+      //       ? ((dt.trip_price + demarage) - totalCost).toFixed(2)
+      //       : (((dt.trip_price + demarage) * dt.rate) / 100).toFixed(2);
+      const { totalCost, profit } = calculateTripSummary(dt);
 
-    // const totalCost = (fuel + gas + others + commission).toFixed(2);
+      return {
+        "#": index + 1,
+        তারিখ: dt.trip_date,
+        "ড্রাইভার নাম": dt.driver_name,
+        "ড্রাইভার মোবাইল": dt.driver_contact,
+        "ট্রান্সপোর্ট টাইপ": dt.transport_type,
+        "কমিশন রেট": dt.rate,
+        "ড্রাইভার কমিশন": dt.driver_percentage,
+        "কোম্পানি কমিশন": dt.company_comission,
+        "লোড পয়েন্ট": dt.load_point,
+        "আনলোড পয়েন্ট": dt.unload_point,
+        "ট্রিপের সময়": dt.trip_time,
+        "কাস্টমারের নাম": dt.customer,
+        "কাস্টমারের মোবাইল": dt.customer_mobile,
+        "ট্রিপের ভাড়া": dt.trip_price,
+        "ওয়েটিং চার্জ": dt.demarage,
+        "তেলের মূল্য": dt.fuel_price,
+        "গ্যাসের মূল্য": dt.gas_price,
+        "অন্যান্য খরচ": dt.other_expenses,
+        "ট্রিপের খরচ": totalCost,
+        লাভ: profit,
+      };
+    });
 
-    // const profit =
-    //   dt.transport_type === "Own Car"
-    //     ? ((dt.trip_price + demarage) - totalCost).toFixed(2)
-    //     : (((dt.trip_price + demarage) * dt.rate) / 100).toFixed(2);
-    const { totalCost, profit } = calculateTripSummary(dt);
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Trip Data");
 
-    return `
+    XLSX.writeFile(workbook, "trip_data.xlsx");
+  };
+
+  // Print Function
+  const printTable = () => {
+    const printRows = filteredTrip
+      .map((dt, index) => {
+        const demarage = parseFloat(dt.demarage ?? "0") || 0;
+        const fuel = parseFloat(dt.fuel_price ?? "0") || 0;
+        const gas = parseFloat(dt.gas_price ?? "0") || 0;
+        const others = parseFloat(dt.other_expenses ?? "0") || 0;
+        const commission = parseFloat(dt.driver_percentage ?? "0") || 0;
+
+        // const totalCost = (fuel + gas + others + commission).toFixed(2);
+
+        // const profit =
+        //   dt.transport_type === "Own Car"
+        //     ? ((dt.trip_price + demarage) - totalCost).toFixed(2)
+        //     : (((dt.trip_price + demarage) * dt.rate) / 100).toFixed(2);
+        const { totalCost, profit } = calculateTripSummary(dt);
+
+        return `
       <tr>
         <td>${index + 1}</td>
         <td>${dt.trip_date}</td>
@@ -281,11 +280,12 @@ const printTable = () => {
         <td>${profit}</td>
       </tr>
     `;
-  }).join("");
+      })
+      .join("");
 
-  const WinPrint = window.open("", "", "width=1200,height=800");
+    const WinPrint = window.open("", "", "width=1200,height=800");
 
-  WinPrint.document.write(`
+    WinPrint.document.write(`
     <html>
       <head>
         <title>Trip Report</title>
@@ -342,11 +342,10 @@ const printTable = () => {
     </html>
   `);
 
-  WinPrint.document.close();
-  WinPrint.focus();
-  WinPrint.print();
-};
-
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+  };
 
   // pagination
   const itemsPerPage = 10;
@@ -379,7 +378,7 @@ const printTable = () => {
           totalPages - 3,
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pages.push(
@@ -389,7 +388,7 @@ const printTable = () => {
           currentPage,
           currentPage + 1,
           "...",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -551,14 +550,14 @@ const printTable = () => {
                       <p>
                         ট্রিপের সময়ঃ{" "}
                         {new Date(
-                          `1970-01-01T${dt.trip_time}`
+                          `1970-01-01T${dt.trip_time}`,
                         ).toLocaleTimeString("en-US", {
                           hour: "numeric",
                           minute: "2-digit",
                           hour12: true,
                         })}
                       </p>
-                    </td>                    
+                    </td>
                     <td className="p-2">
                       <p>
                         কাস্টমারের নামঃ <p>{dt.customer}</p>
@@ -569,13 +568,13 @@ const printTable = () => {
                     </td>
                     <td className="p-2">{dt.transport_type}</td>
                     <td className="p-2">{dt.trip_price}</td>
-                     <td className="p-2">{dt.demarage}</td>
+                    <td className="p-2">{dt.demarage}</td>
                     {/* <td className="p-2">{dt.transport_type === "Own Car" ? totalCost: dt.rate}</td>
                     <td className="p-2">
                       {dt.transport_type === "Own Car" ? ((dt.trip_price + demarage )- totalCost) : (((dt.trip_price+demarage)* dt.rate)/100)}
                     </td> */}
                     <td className="p-2">{totalCost}</td>
-                     <td className="p-2">{profit}</td>
+                    <td className="p-2">{profit}</td>
                     {user.data.user.role === "User" ? (
                       ""
                     ) : (
@@ -640,7 +639,7 @@ const printTable = () => {
               >
                 {number}
               </button>
-            )
+            ),
           )}
           <button
             onClick={handleNextPage}
@@ -702,7 +701,7 @@ const printTable = () => {
                   <p className="w-48">ট্রিপের সময়</p>{" "}
                   <p>
                     {new Date(
-                      `1970-01-01T${selectedTrip.trip_time}`
+                      `1970-01-01T${selectedTrip.trip_time}`,
                     ).toLocaleTimeString("en-US", {
                       hour: "numeric",
                       minute: "2-digit",

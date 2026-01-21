@@ -53,8 +53,8 @@ const UpdateDriverForm = () => {
       }
 
       const response = await axios.post(
-        `https://pochao.tramessy.com/backend/api/driver/${id}`,
-        formData
+        `https://rent.demo.tramessy.com/backend/api/driver/${id}`,
+        formData,
       );
 
       const resData = response.data;

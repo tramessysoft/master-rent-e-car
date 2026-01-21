@@ -24,7 +24,7 @@ const CarList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/driver")
+      .get("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => {
         if (response.data.status === "success") {
           setDrivers(response.data.data);
@@ -42,10 +42,10 @@ const CarList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/driver/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/driver/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -72,7 +72,7 @@ const CarList = () => {
   const handleView = async (id) => {
     try {
       const response = await axios.get(
-        `https://pochao.tramessy.com/backend/api/driver/${id}`
+        `https://rent.demo.tramessy.com/backend/api/driver/${id}`,
       );
       if (response.data.status === "success") {
         setSelectedDriver(response.data.data);
@@ -187,7 +187,7 @@ const CarList = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentDrivers = filteredDriver.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
   const totalPages = Math.ceil(drivers.length / itemsPerPage);
   const handlePrevPage = () => {
@@ -215,7 +215,7 @@ const CarList = () => {
           totalPages - 3,
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pages.push(
@@ -225,7 +225,7 @@ const CarList = () => {
           currentPage,
           currentPage + 1,
           "...",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -384,7 +384,7 @@ const CarList = () => {
               >
                 {number}
               </button>
-            )
+            ),
           )}
           <button
             onClick={handleNextPage}

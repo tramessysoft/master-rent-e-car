@@ -21,10 +21,10 @@ const DailyIncome = () => {
     const fetchTrips = async () => {
       try {
         const res = await axios.get(
-          "https://pochao.tramessy.com/backend/api/trip"
+          "https://rent.demo.tramessy.com/backend/api/trip",
         );
         const sorted = res.data.data.sort(
-          (a, b) => new Date(b.trip_date) - new Date(a.trip_date)
+          (a, b) => new Date(b.trip_date) - new Date(a.trip_date),
         );
         setTrips(sorted);
       } catch (err) {
@@ -149,7 +149,7 @@ const DailyIncome = () => {
           totalPages - 3,
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pages.push(
@@ -159,7 +159,7 @@ const DailyIncome = () => {
           currentPage,
           currentPage + 1,
           "...",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -327,7 +327,7 @@ const DailyIncome = () => {
                         Number(t.gas_price || 0) +
                         Number(t.fuel_price || 0) +
                         Number(t.driver_percentage || 0),
-                      0
+                      0,
                     )
                     .toFixed(2)}
                 </td>
@@ -379,7 +379,7 @@ const DailyIncome = () => {
                 >
                   {number}
                 </button>
-              )
+              ),
             )}
             <button
               onClick={handleNextPage}

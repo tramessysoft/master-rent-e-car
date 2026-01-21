@@ -28,7 +28,7 @@ const Fuel = () => {
   // Fetch fuel data
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/fuel")
+      .get("https://rent.demo.tramessy.com/backend/api/fuel")
       .then((response) => {
         if (response.data.status === "success") {
           setFuel(response.data.data);
@@ -95,10 +95,10 @@ const Fuel = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/fuel/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/fuel/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {

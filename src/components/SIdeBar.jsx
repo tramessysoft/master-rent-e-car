@@ -37,7 +37,7 @@ const Sidebar = () => {
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 py-3 border-b border-gray-300">     
             <Link to="/">
-              <img src={logo} alt="Logo" className="w-22" />
+              <img src={logo} alt="Logo" className="w-24" />
             </Link>
             {/* <div className="text-xs text-primary">
               <div className="font-semibold text-xl py-2">পৌঁছাও</div>

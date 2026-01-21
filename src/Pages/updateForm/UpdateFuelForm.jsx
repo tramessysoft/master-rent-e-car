@@ -41,7 +41,7 @@ const UpdateFuelForm = () => {
   // car name / registration number
   const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
-    fetch("https://pochao.tramessy.com/backend/api/vehicle")
+    fetch("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => response.json())
       .then((data) => setVehicles(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -53,7 +53,7 @@ const UpdateFuelForm = () => {
   }));
   // driver name
   useEffect(() => {
-    fetch("https://pochao.tramessy.com/backend/api/driver")
+    fetch("https://rent.demo.tramessy.com/backend/api/driver")
       .then((response) => response.json())
       .then((data) => setDrivers(data.data))
       .catch((error) => console.error("Error fetching driver data:", error));
@@ -67,13 +67,13 @@ const UpdateFuelForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://pochao.tramessy.com/backend/api/fuel/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/fuel/${id}`,
         data,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const resData = response.data;

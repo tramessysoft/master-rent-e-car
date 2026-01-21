@@ -26,7 +26,7 @@ const AllUsers = () => {
   // fetch all users
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/users")
+      .get("https://rent.demo.tramessy.com/backend/api/users")
       .then((response) => {
         if (response.data.status === "success") {
           setUsers(response.data.data);
@@ -44,10 +44,10 @@ const AllUsers = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/users/delete/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/users/delete/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -77,7 +77,7 @@ const AllUsers = () => {
       user.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.status?.toLowerCase().includes(searchTerm.toLowerCase())
+      user.status?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   // pagination
   const itemsPerPage = 10;

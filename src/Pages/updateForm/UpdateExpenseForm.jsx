@@ -55,13 +55,13 @@ const UpdateExpenseForm = () => {
       };
 
       const response = await axios.post(
-        `https://pochao.tramessy.com/backend/api/trip/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/trip/${id}`,
         updatedData,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const resData = response.data;

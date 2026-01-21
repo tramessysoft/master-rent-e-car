@@ -26,7 +26,7 @@ const Maintenance = () => {
   // Fetch maintenance data
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/maintenance")
+      .get("https://rent.demo.tramessy.com/backend/api/maintenance")
       .then((response) => {
         if (response.data.status === "success") {
           setMaintenance(response.data.data);
@@ -44,10 +44,10 @@ const Maintenance = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/maintenance/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/maintenance/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -149,7 +149,7 @@ const Maintenance = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentMaintenance = filteredMaintenance.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
   const totalPages = Math.ceil(maintenance.length / itemsPerPage);
   const handlePrevPage = () => {
@@ -177,7 +177,7 @@ const Maintenance = () => {
           totalPages - 3,
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pages.push(
@@ -187,7 +187,7 @@ const Maintenance = () => {
           currentPage,
           currentPage + 1,
           "...",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -373,7 +373,7 @@ const Maintenance = () => {
                 >
                   {number}
                 </button>
-              )
+              ),
             )}
             <button
               onClick={handleNextPage}

@@ -15,13 +15,13 @@ const UpdatePartsForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `https://pochao.tramessy.com/backend/api/parts/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/parts/${id}`,
         data,
         {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const resData = response.data;

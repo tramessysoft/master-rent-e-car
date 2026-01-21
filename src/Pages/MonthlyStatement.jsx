@@ -11,9 +11,9 @@ const MonthlyStatement = () => {
     const fetchData = async () => {
       try {
         const [tripRes, maintenanceRes, expenseRes] = await Promise.all([
-          axios.get("https://pochao.tramessy.com/backend/api/trip"),
-          axios.get("https://pochao.tramessy.com/backend/api/maintenance"),
-          axios.get("https://pochao.tramessy.com/backend/api/expense/list"),
+          axios.get("https://rent.demo.tramessy.com/backend/api/trip"),
+          axios.get("https://rent.demo.tramessy.com/backend/api/maintenance"),
+          axios.get("https://rent.demo.tramessy.com/backend/api/expense/list"),
         ]);
 
         const trips = tripRes.data?.data || [];
@@ -22,13 +22,13 @@ const MonthlyStatement = () => {
 
         // Group by month
         const tripsByMonth = groupBy(trips, (item) =>
-          item.trip_date.slice(0, 7)
+          item.trip_date.slice(0, 7),
         );
         const maintenanceByMonth = groupBy(maintenance, (item) =>
-          item.date.slice(0, 7)
+          item.date.slice(0, 7),
         );
         const expenseByMonth = groupBy(expenses, (item) =>
-          item.date ? item.date.slice(0, 7) : null
+          item.date ? item.date.slice(0, 7) : null,
         );
 
         const months = new Set([
@@ -44,7 +44,7 @@ const MonthlyStatement = () => {
 
           const totalTripIncome = tripList.reduce(
             (sum, item) => sum + parseFloat(item.trip_price || 0),
-            0
+            0,
           );
 
           const totalTripCost = tripList.reduce((sum, item) => {
@@ -57,13 +57,13 @@ const MonthlyStatement = () => {
 
           const maintenanceCost = maintenanceList.reduce(
             (sum, item) => sum + parseFloat(item.total_cost || 0),
-            0
+            0,
           );
 
           // ✅ Fixed: Only this month's expense
           const officeCost = expenseList.reduce(
             (sum, item) => sum + parseFloat(item.pay_amount || 0),
-            0
+            0,
           );
 
           const totalCost = totalTripCost + maintenanceCost + officeCost;

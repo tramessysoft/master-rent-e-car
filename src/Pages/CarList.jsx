@@ -26,7 +26,7 @@ const CarList = () => {
   const toggleModal = () => setIsOpen(!isOpen);
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/vehicle")
+      .get("https://rent.demo.tramessy.com/backend/api/vehicle")
       .then((response) => {
         if (response.data.status === "success") {
           setVehicle(response.data.data);
@@ -42,10 +42,10 @@ const CarList = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/vehicle/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -110,7 +110,7 @@ const CarList = () => {
     // Map your csvData to ensure column order matches the headers
     const data = csvData.map((item, index) => ({
       "#": index + 1,
-      "ড্রাইভার": item.driver_name,
+      ড্রাইভার: item.driver_name,
       "গাড়ি নাম": item.vehicle_name,
       ধরন: item.category,
       "আসন সংখ্যা": item.size,
@@ -167,7 +167,7 @@ const CarList = () => {
   const handleViewCar = async (id) => {
     try {
       const response = await axios.get(
-        `https://pochao.tramessy.com/backend/api/vehicle/${id}`
+        `https://rent.demo.tramessy.com/backend/api/vehicle/${id}`,
       );
       if (response.data.status === "success") {
         setselectedCar(response.data.data);
@@ -203,7 +203,7 @@ const CarList = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentVehicles = filteredCarList.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
   const totalPages = Math.ceil(vehicles.length / itemsPerPage);
   const handlePrevPage = () => {

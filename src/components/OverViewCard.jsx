@@ -23,7 +23,7 @@ const OverViewCard = () => {
     const fetchVehicles = async () => {
       try {
         const response = await axios.get(
-          "https://pochao.tramessy.com/backend/api/vehicle"
+          "https://rent.demo.tramessy.com/backend/api/vehicle",
         );
         const vehicles = response.data?.data || [];
 
@@ -61,7 +61,7 @@ const OverViewCard = () => {
     const fetchFuelData = async () => {
       try {
         const response = await axios.get(
-          "https://pochao.tramessy.com/backend/api/fuel"
+          "https://rent.demo.tramessy.com/backend/api/fuel",
         );
         const fuels = response.data?.data || [];
 
@@ -106,7 +106,7 @@ const OverViewCard = () => {
     const fetchMaintenanceData = async () => {
       try {
         const response = await axios.get(
-          "https://pochao.tramessy.com/backend/api/maintenance"
+          "https://rent.demo.tramessy.com/backend/api/maintenance",
         );
         const data = response.data.data;
 
@@ -130,7 +130,7 @@ const OverViewCard = () => {
     const fetchTripData = async () => {
       try {
         const response = await axios.get(
-          "https://pochao.tramessy.com/backend/api/trip"
+          "https://rent.demo.tramessy.com/backend/api/trip",
         );
         const data = response.data.data;
 
@@ -140,23 +140,23 @@ const OverViewCard = () => {
         const todayTrips = data.filter((trip) => trip.trip_date === today);
 
         // Sum today's total trip expenses (other + fuel + gas)
-const totalTripExpenses = todayTrips.reduce((sum, trip) => {
-  const other = parseFloat(trip.other_expenses || 0);
-  const fuel = parseFloat(trip.fuel_price || 0);
-  const gas = parseFloat(trip.gas_price || 0);
+        const totalTripExpenses = todayTrips.reduce((sum, trip) => {
+          const other = parseFloat(trip.other_expenses || 0);
+          const fuel = parseFloat(trip.fuel_price || 0);
+          const gas = parseFloat(trip.gas_price || 0);
 
-  return sum + other + fuel + gas;
-}, 0);
+          return sum + other + fuel + gas;
+        }, 0);
 
         // Sum today's demarage
         const totalDemarage = todayTrips.reduce(
           (sum, trip) => sum + parseFloat(trip.demarage || 0),
-          0
+          0,
         );
         // Sum today's driver commission
         const totalCommission = todayTrips.reduce(
           (sum, trip) => sum + parseFloat(trip.driver_percentage || 0),
-          0
+          0,
         );
 
         const totalTripIncome = todayTrips.reduce((sum, trip) => {
@@ -176,11 +176,10 @@ const totalTripExpenses = todayTrips.reduce((sum, trip) => {
 
           const revenue = tripPrice + demarage;
 
-          const isOwnCar =
-            trip.transport_type?.toLowerCase() === "own car";
+          const isOwnCar = trip.transport_type?.toLowerCase() === "own car";
 
           if (isOwnCar) {
-            const ownRevenue = revenue - totalCost
+            const ownRevenue = revenue - totalCost;
             // Own Car → full revenue
             return sum + ownRevenue;
           } else {

@@ -20,7 +20,7 @@ const DailyExpense = () => {
   // Fetch data
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/trip")
+      .get("https://rent.demo.tramessy.com/backend/api/trip")
       .then((response) => {
         if (response.data.status === "success") {
           const sortedData = response.data.data.sort((a, b) => {
@@ -153,7 +153,7 @@ const DailyExpense = () => {
           totalPages - 3,
           totalPages - 2,
           totalPages - 1,
-          totalPages
+          totalPages,
         );
       } else {
         pages.push(
@@ -163,7 +163,7 @@ const DailyExpense = () => {
           currentPage,
           currentPage + 1,
           "...",
-          totalPages
+          totalPages,
         );
       }
     }
@@ -324,7 +324,7 @@ const DailyExpense = () => {
                   {currentTrip
                     ?.reduce(
                       (sum, item) => sum + parseFloat(item.trip_price ?? "0"),
-                      0
+                      0,
                     )
                     .toFixed(2)}
                 </td>
@@ -389,7 +389,7 @@ const DailyExpense = () => {
                 >
                   {number}
                 </button>
-              )
+              ),
             )}
 
             <button

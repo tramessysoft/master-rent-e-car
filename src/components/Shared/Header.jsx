@@ -39,7 +39,7 @@ const Header = ({ setMobileSidebarOpen }) => {
   return (
     <>
       {/* Header */}
-      <div className="flex justify-between items-center px-5 py-2.5 border-b border-gray-300 relative z-40 bg-white">
+      <div className="flex justify-between items-center px-5 py-1 border-b border-gray-300 relative z-40 bg-white">
         {/* Title */}
         <div className="flex items-center gap-3 cursor-pointer">
           <h3
@@ -49,8 +49,8 @@ const Header = ({ setMobileSidebarOpen }) => {
             <FaBars />
           </h3>
 
-          <Link to="/" className="font-semibold text-primary">
-            হোম
+          <Link to="/" className="font-semibold text-md text-primary">
+            রেন্ট-এ-কার ডেমো
           </Link>
         </div>
 

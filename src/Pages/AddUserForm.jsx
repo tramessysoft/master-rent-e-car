@@ -23,8 +23,8 @@ const AddUserForm = () => {
         formData.append(key, data[key]);
       }
       const response = await axios.post(
-        "https://pochao.tramessy.com/backend/api/users",
-        formData
+        "https://rent.demo.tramessy.com/backend/api/users",
+        formData,
       );
       const resData = response.data;
       if (resData.status === "success") {

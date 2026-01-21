@@ -27,7 +27,7 @@ const Booking = () => {
   // fetch data
   useEffect(() => {
     axios
-      .get("https://pochao.tramessy.com/backend/api/booking")
+      .get("https://rent.demo.tramessy.com/backend/api/booking")
       .then((response) => {
         if (response.data.status === "success") {
           setBooking(response.data.data);
@@ -55,10 +55,10 @@ const Booking = () => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
-        `https://pochao.tramessy.com/backend/api/booking/${id}`,
+        `https://rent.demo.tramessy.com/backend/api/booking/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -82,8 +82,8 @@ const Booking = () => {
 
   const filteredBookings = bookings.filter((booking) =>
     Object.values(booking).some((val) =>
-      String(val).toLowerCase().includes(searchTerm.toLowerCase())
-    )
+      String(val).toLowerCase().includes(searchTerm.toLowerCase()),
+    ),
   );
 
   if (loading) return <p className="text-center mt-16">Loading booking...</p>;
